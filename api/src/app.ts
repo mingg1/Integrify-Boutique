@@ -7,7 +7,6 @@ import cors from 'cors'
 
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
-import movieRouter from './routers/movie.router'
 
 dotenv.config({ path: '.env' })
 const app = express()
@@ -16,13 +15,10 @@ const app = express()
 app.set('port', process.env.PORT)
 
 // Global middleware
-app.use(
-  cors({
-    origin: '*',
-  })
-)
+app.use(cors({ origin: '*' }))
 app.use(apiContentType)
 app.use(express.json())
+
 /** using passport also requires to ass session and cookieParser middlewares to express
  * To be activated later
 app.use(cookieParser())
@@ -40,9 +36,6 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 */
-
-// Set up routers
-app.use('/api/v1/movies', movieRouter)
 
 // Custom API error handler
 app.use(apiErrorHandler)

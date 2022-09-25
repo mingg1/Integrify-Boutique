@@ -1,6 +1,5 @@
 import errorHandler from 'errorhandler'
 import mongoose from 'mongoose'
-
 import app from './app'
 import { MONGODB_URI } from './util/secrets'
 import logger from './util/logger'

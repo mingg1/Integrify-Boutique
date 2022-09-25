@@ -1,11 +1,11 @@
 {
-  "name": "express-typescript-starter",
+  "name": "e-commerce-api",
   "version": "0.1.0",
-  "description": "A starting point for Node.js express apps with TypeScript",
+  "description": "Api for E-commerce project",
   "repository": {
     "type": "git"
   },
-  "author": "Bowden Kelly",
+  "author": "Minji Choi",
   "license": "MIT",
   "scripts": {
     "start": "ts-node src/server.ts",
