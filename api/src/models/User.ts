@@ -6,7 +6,7 @@ enum UserRole {
 }
 
 export type UserDocument = Document & {
-  first_name: string
+  firstName: string
   lastName: string
   email: string
   password: string
@@ -15,17 +15,18 @@ export type UserDocument = Document & {
 }
 
 const userSchema = new mongoose.Schema({
-  first_name: {
+  firstName: {
     type: String,
     required: true,
   },
-  last_name: {
+  lastName: {
     type: String,
     required: true,
   },
   email: {
     type: String,
     required: true,
+    index: true,
   },
   password: {
     type: String,

@@ -2,11 +2,11 @@ import mongoose, { Document } from 'mongoose'
 
 export type ProductDocument = Document & {
   name: string
-  description: string
+  description?: string
   price: number
-  thumbnail: string
-  category: string[]
-  size: string[]
+  thumbnail?: string
+  category?: string[]
+  size?: string[]
   quantity: number
 }
 
