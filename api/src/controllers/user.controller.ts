@@ -1,48 +1,36 @@
 import { Request, Response, NextFunction } from 'express'
-
-import Movie from '../models/Movie'
-import movieService from '../services/movie.service'
 import { BadRequestError } from '../helpers/apiError'
+import userService from '../services/user.service'
 
-// POST /movies
-export const createMovie = async (
+// POST /users
+export const signUp = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const { name, publishedYear, genres, duration, characters } = req.body
-
-    const movie = new Movie({
-      name,
-      publishedYear,
-      genres,
-      duration,
-      characters,
-    })
-
-    await movieService.create(movie)
-    res.json(movie)
+    const newUser = await userService.create(req.body)
+    return res.json(newUser)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
-      next(new BadRequestError('Invalid Request', 400, error))
+      next(new BadRequestError(error.message, 400, error))
     } else {
       next(error)
     }
   }
 }
 
-// PUT /movies/:movieId
-export const updateMovie = async (
+// PATCH /users/:id
+export const updateUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
     const update = req.body
-    const movieId = req.params.movieId
-    const updatedMovie = await movieService.update(movieId, update)
-    res.json(updatedMovie)
+    const userId = req.params.id
+    const updatedUser = await userService.update(userId, update)
+    return res.json(updatedUser)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))
@@ -52,15 +40,15 @@ export const updateMovie = async (
   }
 }
 
-// DELETE /movies/:movieId
-export const deleteMovie = async (
+// DELETE /users/:id
+export const deleteUser = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    await movieService.deleteMovie(req.params.movieId)
-    res.status(204).end()
+    await userService.deleteUser(req.params.id)
+    return res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))
@@ -70,14 +58,14 @@ export const deleteMovie = async (
   }
 }
 
-// GET /movies/:movieId
-export const findById = async (
+// GET /users/:id
+export const getUserById = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await movieService.findById(req.params.movieId))
+    return res.json(await userService.findById(req.params.id))
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))
@@ -87,14 +75,39 @@ export const findById = async (
   }
 }
 
-// GET /movies
-export const findAll = async (
+// GET /users
+export const getAllUsers = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    res.json(await movieService.findAll())
+    return res.json(await userService.findAll())
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', 400, error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+// PATCH /users/:id/change-password
+export const updatePassword = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const userId = req.params.id
+    const { oldPassword, newPassword, newPwConfirmation } = req.body
+    await userService.updatePassword(
+      userId,
+      oldPassword,
+      newPassword,
+      newPwConfirmation
+    )
+    return res.status(204).end()
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))
