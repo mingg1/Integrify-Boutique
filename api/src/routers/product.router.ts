@@ -1,10 +1,10 @@
+import express from 'express'
 import {
   deleteProduct,
   updateProduct,
   getProductById,
   getAllProducts,
 } from './../controllers/product.controller'
-import express from 'express'
 
 const router = express.Router()
 

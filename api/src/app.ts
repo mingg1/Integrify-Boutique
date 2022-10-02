@@ -4,7 +4,8 @@ import cors from 'cors'
 // import session from 'express-session'
 // import cookieParser from 'cookie-parser'
 // import passport from 'passport'
-
+import userRouter from './routers/user.router'
+import productRouter from './routers/product.router'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
 
@@ -36,6 +37,10 @@ app.use(
 app.use(passport.initialize())
 app.use(passport.session())
 */
+
+// Set up routers
+app.use('/api/v1/products', productRouter)
+app.use('/api/v1/users', userRouter)
 
 // Custom API error handler
 app.use(apiErrorHandler)

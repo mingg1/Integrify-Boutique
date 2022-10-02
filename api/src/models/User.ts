@@ -1,8 +1,9 @@
 import mongoose, { Document } from 'mongoose'
+import bcrypt from 'bcrypt'
 
 enum UserRole {
-  Admin,
-  Customer,
+  Admin = 'admin',
+  Customer = 'customer',
 }
 
 export type UserDocument = Document & {
@@ -26,22 +27,31 @@ const userSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
-    index: true,
+    index: {
+      unique: true,
+    },
   },
   password: {
     type: String,
     required: true,
   },
   role: {
-    type: Number,
+    type: String,
     required: true,
     enum: UserRole,
+    default: UserRole.Customer,
   },
   banned: {
     type: Boolean,
     required: true,
     default: false,
   },
+})
+
+// password encryption before saving a document
+userSchema.pre('save', async function () {
+  if (this.isModified('password'))
+    this.password = await bcrypt.hash(this.password, 12)
 })
 
 export default mongoose.model<UserDocument>('User', userSchema)
