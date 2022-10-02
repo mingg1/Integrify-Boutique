@@ -1,6 +1,6 @@
 import bcrypt from 'bcrypt'
 import User, { UserDocument } from '../models/User'
-import { NotFoundError, BadRequestError } from './../helpers/apiError'
+import { NotFoundError, BadRequestError } from '../helpers/apiError'
 
 const create = async (
   userInput: UserDocument & { pwConfirmation: string }
