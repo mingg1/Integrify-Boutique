@@ -10,10 +10,7 @@ export const addProduct = async (
   next: NextFunction
 ) => {
   try {
-    const newProduct = new Product({
-      ...req.body,
-    })
-    await productService.create(newProduct)
+    const newProduct = await productService.create(req.body)
     return res.json(newProduct)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {

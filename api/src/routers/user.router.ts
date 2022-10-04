@@ -1,3 +1,8 @@
+import {
+  validate,
+  signUpSchema,
+  updatePasswordSchema,
+} from './../middlewares/schemaValidation'
 import express from 'express'
 import {
   getAllUsers,
@@ -10,8 +15,13 @@ import {
 
 const router = express.Router()
 
-router.route('/').get(getAllUsers).post(signUp)
+router.route('/').get(getAllUsers).post(validate(signUpSchema), signUp)
+router.route('/login').post()
 router.route('/:id').get(getUserById).patch(updateUser).delete(deleteUser)
-router.patch('/:id/change-password', updatePassword)
+router.patch(
+  '/:id/change-password',
+  validate(updatePasswordSchema),
+  updatePassword
+)
 
 export default router
