@@ -12,14 +12,22 @@ import {
   deleteUser,
   updatePassword,
 } from './../controllers/user.controller'
+import checkAuth from '../middlewares/checkAuth'
 
 const router = express.Router()
 
-router.route('/').get(getAllUsers).post(validate(signUpSchema), signUp)
-router.route('/login').post()
-router.route('/:id').get(getUserById).patch(updateUser).delete(deleteUser)
+router
+  .route('/')
+  .get(checkAuth, getAllUsers)
+  .post(validate(signUpSchema), signUp)
+router
+  .route('/:id')
+  .get(getUserById)
+  .patch(checkAuth, updateUser)
+  .delete(checkAuth, deleteUser)
 router.patch(
   '/:id/change-password',
+  checkAuth,
   validate(updatePasswordSchema),
   updatePassword
 )

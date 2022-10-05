@@ -93,6 +93,22 @@ export const getUserById = async (
   }
 }
 
+export const getUserByEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    return res.json(await userService.findByEmail(req.params.email))
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', 400, error))
+    } else {
+      next(error)
+    }
+  }
+}
+
 // GET /users
 export const getAllUsers = async (
   req: Request,

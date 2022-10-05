@@ -3,9 +3,11 @@ import dotenv from 'dotenv'
 import cors from 'cors'
 // import session from 'express-session'
 // import cookieParser from 'cookie-parser'
-// import passport from 'passport'
+import passport from 'passport'
+import loginWithGoogle from './passport/google'
 import userRouter from './routers/user.router'
 import productRouter from './routers/product.router'
+import authRouter from './routers/auth.router'
 import apiErrorHandler from './middlewares/apiErrorHandler'
 import apiContentType from './middlewares/apiContentType'
 
@@ -34,13 +36,14 @@ app.use(
     secret: 'secret',
   })
 )
-app.use(passport.initialize())
 app.use(passport.session())
 */
-
+app.use(passport.initialize())
+passport.use(loginWithGoogle())
 // Set up routers
 app.use('/api/v1/products', productRouter)
 app.use('/api/v1/users', userRouter)
+app.use('/api/v1/auth', authRouter)
 
 // Custom API error handler
 app.use(apiErrorHandler)

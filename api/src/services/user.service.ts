@@ -27,6 +27,13 @@ const findById = async (userId: string): Promise<Partial<UserDocument>> => {
   return foundUser
 }
 
+const findByEmail = async (
+  email: string
+): Promise<Partial<UserDocument> | null> => {
+  const user = await User.findOne({ email })
+  return user
+}
+
 const findAll = async (): Promise<UserDocument[]> => {
   return User.find({}, { password: 0 }).sort({ name: 1 })
 }
@@ -57,6 +64,10 @@ const updatePassword = async (
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
   }
+  if (!foundUser.password) {
+    throw new NotFoundError('This user doesn\'t have password')
+  }
+
   const samePassword = await bcrypt.compare(oldPassword, foundUser.password)
   if (!samePassword) {
     throw new BadRequestError('Current password is not correct')
@@ -71,17 +82,16 @@ const updatePassword = async (
 
 const deleteUser = async (userId: string): Promise<UserDocument | null> => {
   const foundUser = User.findByIdAndDelete(userId)
-
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
   }
-
   return foundUser
 }
 
 export default {
   create,
   findById,
+  findByEmail,
   findAll,
   update,
   deleteUser,
