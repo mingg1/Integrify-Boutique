@@ -9,11 +9,7 @@ export default () => {
     {
       clientID: GOOGLE_CLIENT_ID,
     },
-    async (
-      parsedToken: ParsedToken,
-      googleId: string,
-      done: VerifiedCallback
-    ) => {
+    async (parsedToken: ParsedToken, _, done: VerifiedCallback) => {
       try {
         const {
           given_name: firstName,
@@ -22,13 +18,11 @@ export default () => {
         } = parsedToken.payload
         let user = await userService.findByEmail(parsedToken.payload.email)
         if (!user) {
-          user = await User.create(
-            new User({
-              firstName: firstName.split(' ')[0],
-              lastName,
-              email,
-            })
-          )
+          user = await User.create({
+            firstName: firstName.split(' ')[0],
+            lastName,
+            email,
+          })
         }
         done(null, user)
       } catch (error) {

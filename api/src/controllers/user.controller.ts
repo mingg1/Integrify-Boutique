@@ -20,24 +20,6 @@ export const signUp = async (
   }
 }
 
-// POST /users/login
-// export const logIn = async (
-//   req: Request,
-//   res: Response,
-//   next: NextFunction
-// ) => {
-//   try {
-//     const newUser = await userService.create(req.body)
-//     return res.json(newUser)
-//   } catch (error) {
-//     if (error instanceof Error && error.name == 'ValidationError') {
-//       next(new BadRequestError(error.message, 400, error))
-//     } else {
-//       next(error)
-//     }
-//   }
-// }
-
 // PATCH /users/:id
 export const updateUser = async (
   req: Request,
@@ -134,10 +116,10 @@ export const updatePassword = async (
 ) => {
   try {
     const userId = req.params.id
-    const { oldPassword, newPassword, newPwConfirmation } = req.body
+    const { currentPassword, newPassword, newPwConfirmation } = req.body
     await userService.updatePassword(
       userId,
-      oldPassword,
+      currentPassword,
       newPassword,
       newPwConfirmation
     )

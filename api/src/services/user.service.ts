@@ -13,9 +13,8 @@ const create = async (
   if (await User.exists({ email })) {
     throw new BadRequestError('This email is already taken')
   }
-  return await User.create(
-    new User({ firstName, lastName, email, password, role })
-  )
+
+  return await User.create({ firstName, lastName, email, password, role })
 }
 
 const findById = async (userId: string): Promise<Partial<UserDocument>> => {
@@ -30,8 +29,12 @@ const findById = async (userId: string): Promise<Partial<UserDocument>> => {
 const findByEmail = async (
   email: string
 ): Promise<Partial<UserDocument> | null> => {
-  const user = await User.findOne({ email })
-  return user
+  const foundUser = await User.findOne({ email })
+  if (!foundUser) {
+    throw new NotFoundError(`User ${email} not found`)
+  }
+
+  return foundUser
 }
 
 const findAll = async (): Promise<UserDocument[]> => {
@@ -44,6 +47,7 @@ const update = async (
 ): Promise<UserDocument | null> => {
   const foundUser = await User.findByIdAndUpdate(userId, update, {
     new: true,
+    projection: { password: 0 },
   })
 
   if (!foundUser) {
@@ -55,7 +59,7 @@ const update = async (
 
 const updatePassword = async (
   userId: string,
-  oldPassword: string,
+  currentPassword: string,
   newPassword: string,
   newPwConfirmation: string
 ): Promise<UserDocument> => {
@@ -68,7 +72,8 @@ const updatePassword = async (
     throw new NotFoundError('This user doesn\'t have password')
   }
 
-  const samePassword = await bcrypt.compare(oldPassword, foundUser.password)
+  const samePassword = await bcrypt.compare(currentPassword, foundUser.password)
+
   if (!samePassword) {
     throw new BadRequestError('Current password is not correct')
   }

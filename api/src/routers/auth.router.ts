@@ -1,11 +1,17 @@
-import { generateAccessToken } from './../controllers/auth.controller'
 import express from 'express'
 import passport from 'passport'
+import { validate, localLoginSchema } from './../middlewares/schemaValidation'
+import { localAuth } from './../controllers/auth.controller'
+import { generateAccessToken } from '../controllers/auth.controller'
 
 const router = express.Router()
 
-// Login with password will be added
-// router.post('/login')
+router.post(
+  '/login',
+  validate(localLoginSchema),
+  localAuth,
+  generateAccessToken
+)
 router.post(
   '/login-google',
   passport.authenticate('google-id-token', { session: false }),

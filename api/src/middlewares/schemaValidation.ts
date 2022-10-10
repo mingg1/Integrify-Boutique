@@ -17,8 +17,8 @@ export const signUpSchema = z.object({
     password: z.string({
       required_error: 'password is required',
     }),
-    password2: z.string({
-      required_error: 'password2 is required',
+    pwConfirmation: z.string({
+      required_error: 'pwConfirmation is required',
     }),
     role: z
       .string({
@@ -28,13 +28,24 @@ export const signUpSchema = z.object({
   }),
 })
 
+export const localLoginSchema = z.object({
+  body: z.object({
+    email: z.string({ required_error: 'Email is required' }),
+    password: z.string({ required_error: 'Password is required' }),
+  }),
+})
+
 export const updateUserSchema = signUpSchema.optional()
 
 export const updatePasswordSchema = z.object({
   body: z.object({
-    oldPassword: z.string({ required_error: 'pw is required' }),
-    newPassword: z.string({ required_error: ' is required' }),
-    newPwConfirmation: z.string({ required_error: ' is required' }),
+    currentPassword: z.string({
+      required_error: 'Current password is required',
+    }),
+    newPassword: z.string({ required_error: 'New password is required' }),
+    newPwConfirmation: z.string({
+      required_error: 'New password confirmation is required',
+    }),
   }),
 })
 
