@@ -1,5 +1,5 @@
 import { PRODUCT } from './../../utils/route';
-import { ProductsState } from './../../utils/types';
+import { ProductsState, ResError } from './../../utils/types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { PRODUCTS } from 'utils/route';
@@ -66,7 +66,9 @@ const productsSlice = createSlice({
     });
     builder.addCase(getProducts.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload as AxiosError;
+      const error = action.payload as AxiosError;
+      const { message, statusCode } = error.response?.data as ResError;
+      state.error = { message, statusCode };
     });
     builder.addCase(getProduct.pending, (state) => {
       state.isLoading = true;
@@ -77,7 +79,9 @@ const productsSlice = createSlice({
     });
     builder.addCase(getProduct.rejected, (state, action) => {
       state.isLoading = false;
-      state.error = action.payload as AxiosError;
+      const error = action.payload as AxiosError;
+      const { message, statusCode } = error.response?.data as ResError;
+      state.error = { message, statusCode };
     });
   },
 });

@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { CredentialResponse } from '@react-oauth/google';
 import {
   LoggedInUserState,
   UserRole,
   LocalLoginInput,
+  ResError,
 } from './../../utils/types';
 import { LOGIN_GOOGLE, LOGIN_LOCAL } from './../../utils/route';
 import { saveLoggedInUser } from 'utils/helper';
@@ -66,6 +67,9 @@ export const loggedInUserSlice = createSlice({
     updateLoggedInUser: (_, action) => {
       return saveLoggedInUser(action.payload);
     },
+    setLoggedInUserError: (state, action) => {
+      state.error = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loginByGoogle.fulfilled, (_, action) => {
@@ -77,12 +81,18 @@ export const loggedInUserSlice = createSlice({
     builder.addCase(localLogin.fulfilled, (_, action) => {
       return saveLoggedInUser(action.payload);
     });
-    builder.addCase(localLogin.rejected, (_, action) => {
-      console.log(action.payload);
+    builder.addCase(localLogin.rejected, (state, action) => {
+      const error = action.payload as AxiosError;
+      const { message, statusCode } = error.response?.data as ResError;
+      state.error = { message, statusCode };
     });
   },
 });
 
-export const { getLoggedInUser, clearLoggedInUser, updateLoggedInUser } =
-  loggedInUserSlice.actions;
+export const {
+  getLoggedInUser,
+  clearLoggedInUser,
+  updateLoggedInUser,
+  setLoggedInUserError,
+} = loggedInUserSlice.actions;
 export default loggedInUserSlice.reducer;
