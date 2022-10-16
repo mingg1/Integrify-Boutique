@@ -27,10 +27,12 @@ export const updateUser = async (
   next: NextFunction
 ) => {
   try {
-    const update = req.body
+    const { google, ...update } = req.body
     const userId = req.params.id
     const updatedUser = await userService.update(userId, update)
-    return res.json(updatedUser)
+    req.user = updatedUser as Express.User
+    req.authInfo = { google }
+    next(null)
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))

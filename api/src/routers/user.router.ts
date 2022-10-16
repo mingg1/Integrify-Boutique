@@ -1,9 +1,9 @@
+import express from 'express'
 import {
   validate,
   signUpSchema,
   updatePasswordSchema,
 } from './../middlewares/schemaValidation'
-import express from 'express'
 import {
   getAllUsers,
   signUp,
@@ -12,22 +12,23 @@ import {
   deleteUser,
   updatePassword,
 } from './../controllers/user.controller'
-import checkAuth from '../middlewares/checkAuth'
+import { generateAccessToken } from './../controllers/auth.controller'
+import { checkCurrentUser, checkAdmin } from './../middlewares/checkAuth'
 
 const router = express.Router()
 
 router
   .route('/')
-  .get(checkAuth, getAllUsers)
+  .get(checkAdmin, getAllUsers)
   .post(validate(signUpSchema), signUp)
 router
   .route('/:id')
   .get(getUserById)
-  .patch(checkAuth, updateUser)
-  .delete(checkAuth, deleteUser)
+  .patch(checkCurrentUser, updateUser, generateAccessToken)
+  .delete(checkAdmin, deleteUser)
 router.patch(
   '/:id/change-password',
-  checkAuth,
+  checkAdmin,
   validate(updatePasswordSchema),
   updatePassword
 )

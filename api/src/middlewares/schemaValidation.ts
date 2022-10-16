@@ -1,3 +1,4 @@
+import { UserRole } from './../models/User'
 import { NextFunction, Request, Response } from 'express'
 import { AnyZodObject, z } from 'zod'
 
@@ -20,11 +21,7 @@ export const signUpSchema = z.object({
     pwConfirmation: z.string({
       required_error: 'pwConfirmation is required',
     }),
-    role: z
-      .string({
-        invalid_type_error: 'invalid_type_error',
-      })
-      .optional(),
+    role: z.enum([UserRole.Admin, UserRole.Customer]).optional(),
   }),
 })
 

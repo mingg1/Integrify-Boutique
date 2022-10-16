@@ -1,5 +1,5 @@
 import express from 'express'
-import checkAuth from '../middlewares/checkAuth'
+import { checkCurrentUser, checkAdmin } from './../middlewares/checkAuth'
 import {
   deleteProduct,
   updateProduct,
@@ -10,11 +10,11 @@ import {
 
 const router = express.Router()
 
-router.route('/').get(getAllProducts).post(checkAuth, addProduct)
+router.route('/').get(getAllProducts).post(addProduct)
 router
   .route('/:id')
   .get(getProductById)
-  .patch(checkAuth, updateProduct)
-  .delete(checkAuth, deleteProduct)
+  .patch(checkAdmin, updateProduct)
+  .delete(checkAdmin, deleteProduct)
 
 export default router

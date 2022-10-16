@@ -30,9 +30,6 @@ const findByEmail = async (
   email: string
 ): Promise<Partial<UserDocument> | null> => {
   const foundUser = await User.findOne({ email })
-  if (!foundUser) {
-    throw new NotFoundError(`User ${email} not found`)
-  }
 
   return foundUser
 }
@@ -43,8 +40,11 @@ const findAll = async (): Promise<UserDocument[]> => {
 
 const update = async (
   userId: string,
-  update: Partial<UserDocument>
+  update: Partial<UserDocument> & { pwConfirmation: string }
 ): Promise<UserDocument | null> => {
+  if (await User.exists({ email: update.email })) {
+    throw new BadRequestError('This email is already taken')
+  }
   const foundUser = await User.findByIdAndUpdate(userId, update, {
     new: true,
     projection: { password: 0 },

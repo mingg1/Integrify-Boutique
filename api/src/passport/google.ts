@@ -24,9 +24,9 @@ export default () => {
             email,
           })
         }
-        done(null, user)
+        return done(null, user, { google: true })
       } catch (error) {
-        done(error)
+        return done(error)
       }
     }
   )
