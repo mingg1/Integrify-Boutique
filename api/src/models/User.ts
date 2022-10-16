@@ -6,6 +6,13 @@ export enum UserRole {
   Customer = 'customer',
 }
 
+enum Permission {
+  ProductsRead = 'products-read',
+  ProductsWrite = 'products-write',
+  UsersRead = 'users-read',
+  UsersWrite = 'users-write',
+}
+
 export type UserDocument = Document & {
   firstName: string
   lastName: string
@@ -13,6 +20,7 @@ export type UserDocument = Document & {
   password?: string
   role: UserRole
   banned: boolean
+  permissions?: Permission[]
 }
 
 const userSchema = new mongoose.Schema({
@@ -44,6 +52,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     required: true,
     default: false,
+  },
+  permissions: {
+    type: [String],
+    enum: Permission,
   },
 })
 

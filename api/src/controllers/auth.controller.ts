@@ -24,6 +24,7 @@ export const generateAccessToken = (
       lastName: user.lastName,
       email: user.email,
       banned: user.banned,
+      permissions: user.permissions,
       google: info?.google || false,
     },
     JWT_SECRET,
