@@ -30,6 +30,9 @@ export const updateUser = async (
     const { google, ...update } = req.body
     const userId = req.params.id
     const updatedUser = await userService.update(userId, update)
+    if (update.hasOwnProperty('banned')) {
+      return res.status(204).end()
+    }
     req.user = updatedUser as Express.User
     req.authInfo = { google }
     next(null)

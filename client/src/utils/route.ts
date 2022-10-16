@@ -6,3 +6,6 @@ export const PRODUCTS = `${URL_BASE}/products`;
 export const PRODUCT = (id: string) => `${URL_BASE}/products/${id}`;
 export const USERS = `${URL_BASE}/users`;
 export const USER = (id: string) => `${URL_BASE}/users/${id}`;
+export const BLOCK_USER = (id: string) => `${URL_BASE}/users/${id}/block`;
+export const CHANGE_PASSWORD = (id: string) =>
+  `${URL_BASE}/users/${id}/change-password`;

@@ -25,12 +25,13 @@ router
   .route('/:id')
   .get(getUserById)
   .patch(checkCurrentUser, updateUser, generateAccessToken)
-  .delete(checkAdmin, deleteUser)
+  .delete(checkCurrentUser, deleteUser)
 router.patch(
   '/:id/change-password',
-  checkAdmin,
+  checkCurrentUser,
   validate(updatePasswordSchema),
   updatePassword
 )
+router.patch('/:id/block', checkAdmin, updateUser)
 
 export default router

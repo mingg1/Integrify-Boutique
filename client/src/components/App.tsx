@@ -2,33 +2,68 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import NavBar from './NavBar';
 import Home from 'pages/Home';
 import SignUp from 'pages/SignUp';
-import SignIn from 'pages/SignIn';
-import PrivateRoute from './PrivateRoute';
+import LogIn from 'pages/LogIn';
+import AdminRoute from './AdminRoute';
 import Admin from 'pages/Admin';
+import Product from 'pages/Product';
+import Profile from 'pages/Profile';
+import EditProfile from 'pages/EditProfile';
+import ChangePassword from 'pages/ChangePassword';
+import UserList from 'pages/UserList';
+import Cart from 'pages/Cart';
+import AddProduct from 'pages/AddProduct';
+import EditProduct from 'pages/EditProduct';
+import ProductList from 'pages/ProductList';
 
 const App = () => {
   return (
     <>
-      <NavBar />
       <BrowserRouter>
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/search" />
-          <Route path="/profile" />
-          <Route path="/users/:id/edit" />
-          <Route path="/users/:id/change-password" />
-          <Route path="/products/:id" />
-          <Route path="/products/add" />
-          <Route path="/products/:id/edit" />
-          <Route path="/cart" />
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/login" element={<LogIn />} />
+          <Route path="/search" element={<LogIn />} />
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/users/:id/edit" element={<EditProfile />} />
+          <Route
+            path="/users/:id/change-password"
+            element={<ChangePassword />}
+          />
+          <Route path="/products/:id" element={<Product />} />
+          <Route path="/products/add" element={<AddProduct />} />
+          <Route path="/cart" element={<Cart />} />
           <Route
             path="/admin"
             element={
-              <PrivateRoute>
+              <AdminRoute>
                 <Admin />
-              </PrivateRoute>
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/users"
+            element={
+              <AdminRoute>
+                <UserList />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products"
+            element={
+              <AdminRoute>
+                <ProductList />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/products/:id/edit"
+            element={
+              <AdminRoute>
+                <EditProduct />
+              </AdminRoute>
             }
           />
         </Routes>
