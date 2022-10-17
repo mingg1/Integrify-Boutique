@@ -11,6 +11,11 @@ export enum Permission {
   UsersWrite = 'users-write',
 }
 
+export interface ResError {
+  message: string;
+  statusCode: number;
+}
+
 export interface LocalLoginInput {
   [key: string]: string;
 }
@@ -27,7 +32,7 @@ export interface LoggedInUserState {
   google: boolean;
   token: string;
   permissions: Permission[];
-  error: AxiosError | null;
+  error: ResError | null;
 }
 
 export interface Product {
@@ -45,7 +50,7 @@ export interface ProductsState {
   products: Product[];
   product: Product | undefined;
   isLoading: boolean;
-  error: AxiosError | null;
+  error: ResError | null;
 }
 
 type User = Omit<
@@ -57,5 +62,5 @@ export interface UsersState {
   users: User[];
   user: User | undefined;
   isLoading: boolean;
-  error: AxiosError | null;
+  error: ResError | null;
 }
