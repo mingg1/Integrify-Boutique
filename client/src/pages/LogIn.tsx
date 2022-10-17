@@ -1,8 +1,8 @@
-import SignupForm from 'components/SignupForm';
+import LoginForm from 'components/LoginForm';
 import { Link, Navigate } from 'react-router-dom';
 import { useAppSelector } from 'redux/hooks';
 
-const SignUp = () => {
+const LogIn = () => {
   const {
     loggedInUser: { _id: userId },
   } = useAppSelector((state) => state);
@@ -11,11 +11,11 @@ const SignUp = () => {
     <Navigate to="/" />
   ) : (
     <>
-      <SignupForm />
+      <LoginForm />
       <p>Already have an account?</p>
-      <Link to={'/login'}>Log in here</Link>
+      <Link to={'/signup'}>Sing up here</Link>
     </>
   );
 };
 
-export default SignUp;
+export default LogIn;
