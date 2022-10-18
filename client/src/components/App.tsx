@@ -14,6 +14,8 @@ import Cart from 'pages/Cart';
 import AddProduct from 'pages/AddProduct';
 import EditProduct from 'pages/EditProduct';
 import ProductList from 'pages/ProductList';
+import Search from 'pages/Search';
+import Products from 'pages/Products';
 
 const App = () => {
   return (
@@ -24,15 +26,23 @@ const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/signup" element={<SignUp />} />
           <Route path="/login" element={<LogIn />} />
-          <Route path="/search" element={<LogIn />} />
+          <Route path="/search" element={<Search />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/users/:id/edit" element={<EditProfile />} />
           <Route
             path="/users/:id/change-password"
             element={<ChangePassword />}
           />
+          <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Product />} />
-          <Route path="/products/add" element={<AddProduct />} />
+          <Route
+            path="/admin/products/add"
+            element={
+              <AdminRoute>
+                <AddProduct />
+              </AdminRoute>
+            }
+          />
           <Route path="/cart" element={<Cart />} />
           <Route
             path="/admin"

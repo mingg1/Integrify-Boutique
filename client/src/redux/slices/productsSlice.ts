@@ -1,5 +1,5 @@
 import { getTokenHeaders } from 'utils/helper';
-import { PRODUCT } from './../../utils/route';
+import { PRODUCT, SEARCH } from './../../utils/route';
 import {
   Product,
   ProductInput,
@@ -92,6 +92,19 @@ export const deleteProduct = createAsyncThunk(
   }
 );
 
+export const searchProduct = createAsyncThunk(
+  'products/search',
+  async (query: string, { rejectWithValue }) => {
+    try {
+      return await (
+        await axios.get(SEARCH(query))
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
 const productsSlice = createSlice({
   name: 'products',
   initialState,
@@ -99,6 +112,13 @@ const productsSlice = createSlice({
     findProduct: (state, action) => {
       state.product = state.products.find(
         (product) => product._id === action.payload
+      );
+    },
+    search: (state, action: { payload: string }) => {
+      state.searched = state.products.filter((product) =>
+        Object.entries(product).some(([_, value]) =>
+          value.toString().toLowerCase().includes(action.payload.toLowerCase())
+        )
       );
     },
   },
@@ -144,8 +164,19 @@ const productsSlice = createSlice({
         (product) => product._id !== action.payload
       );
     });
+    builder.addCase(searchProduct.pending, (state) => {
+      state.isLoading = true;
+    });
+    builder.addCase(searchProduct.fulfilled, (state, action) => {
+      state.isLoading = false;
+      state.searched = action.payload;
+    });
+    builder.addCase(searchProduct.rejected, (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload as ResError;
+    });
   },
 });
 
-export const { findProduct } = productsSlice.actions;
+export const { findProduct, search } = productsSlice.actions;
 export default productsSlice.reducer;

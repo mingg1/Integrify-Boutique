@@ -6,11 +6,13 @@ import {
   getProductById,
   getAllProducts,
   addProduct,
+  search,
 } from './../controllers/product.controller'
 
 const router = express.Router()
 
-router.route('/').get(getAllProducts).post(addProduct)
+router.route('/').get(getAllProducts).post(checkAdmin, addProduct)
+router.get('/search', search)
 router
   .route('/:id')
   .get(getProductById)

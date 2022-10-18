@@ -4,6 +4,7 @@ interface FormFieldProps {
   label: string;
   className?: string;
   input: {
+    id?: string;
     type: string;
     placeholder?: string;
     name: string;

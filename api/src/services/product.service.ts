@@ -19,6 +19,19 @@ const findAll = async (): Promise<ProductDocument[]> => {
   return Product.find().sort({ name: 1 })
 }
 
+const search = async (query: string): Promise<ProductDocument[]> => {
+  //text index?
+  const products = await Product.find().sort({ name: 1 })
+
+  const filtered = products.filter((product: ProductDocument) => {
+    const productInfo: ProductDocument = Object.values(product)[2]
+    return Object.entries(productInfo).some(([_, value]) =>
+      value.toString().toLowerCase().includes(query.toLowerCase())
+    )
+  })
+  return filtered
+}
+
 const update = async (
   productId: string,
   update: Partial<ProductDocument>
@@ -52,4 +65,5 @@ export default {
   findAll,
   update,
   deleteProduct,
+  search,
 }
