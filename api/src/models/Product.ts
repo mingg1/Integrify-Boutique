@@ -1,12 +1,34 @@
 import mongoose, { Document } from 'mongoose'
 
+export enum ProductCategory {
+  Top = 'top',
+  Bottom = 'bottom',
+  Sweater = 'sweater',
+  Jacket = 'jacket',
+  Coat = 'coat',
+  Tshirt = 't-shirt',
+  Jeans = 'jeans',
+  Skirt = 'skirt',
+  Dress = 'dress',
+  Accessory = 'accessory',
+  Shoes = 'shoes',
+  Bag = 'bag',
+}
+export enum Size {
+  XSmall = 'XS',
+  Small = 'S',
+  Medium = 'M',
+  Large = 'L',
+  XLarge = 'XL',
+}
+
 export type ProductDocument = Document & {
   name: string
   description?: string
   price: number
   thumbnail?: string
-  category?: string[]
-  size?: string[]
+  category?: ProductCategory[]
+  size?: Size[]
   quantity: number
 }
 
@@ -29,9 +51,13 @@ const productSchema = new mongoose.Schema({
   },
   category: {
     type: [String],
+    enum: ProductCategory,
+    required: true,
   },
   size: {
     type: [String],
+    enum: Size,
+    required: true,
   },
   quantity: {
     type: Number,
