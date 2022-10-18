@@ -1,9 +1,33 @@
-import { AxiosError } from 'axios';
+import { FormEvent } from 'react';
 
 export enum UserRole {
   Admin = 'admin',
   Customer = 'customer',
 }
+
+export enum ProductCategory {
+  Top = 'top',
+  Bottom = 'bottom',
+  Sweater = 'sweater',
+  Jacket = 'jacket',
+  Coat = 'coat',
+  Tshirt = 't-shirt',
+  Jeans = 'jeans',
+  Skirt = 'skirt',
+  Dress = 'dress',
+  Accessory = 'accessory',
+  Shoes = 'shoes',
+  Bag = 'bag',
+}
+
+export enum Size {
+  XSmall = 'XS',
+  Small = 'S',
+  Medium = 'M',
+  Large = 'L',
+  XLarge = 'XL',
+}
+
 export enum Permission {
   ProductsRead = 'products-read',
   ProductsWrite = 'products-write',
@@ -13,11 +37,16 @@ export enum Permission {
 
 export interface ResError {
   message: string;
-  statusCode: number;
 }
+
+export type SubmitEvent<T> = (e: FormEvent<T>) => void;
 
 export interface LocalLoginInput {
   [key: string]: string;
+}
+
+export interface ProductInput extends Partial<Product> {
+  token: string;
 }
 
 export interface LoggedInUserState {
@@ -40,15 +69,17 @@ export interface Product {
   name: string;
   description: string;
   price: number;
-  category: string[];
-  size: string[];
+  category: ProductCategory[];
+  size: Size[];
   quantity: number;
   thumbnail: string;
+  __v: number;
 }
 
 export interface ProductsState {
   products: Product[];
   product: Product | undefined;
+  searched: Product[];
   isLoading: boolean;
   error: ResError | null;
 }

@@ -28,3 +28,8 @@ export const getTokenHeaders = (token: string) => ({
     'content-type': 'application/json',
   },
 });
+
+export const onFieldChange = (
+  event: React.ChangeEvent<HTMLInputElement>,
+  setState: React.Dispatch<React.SetStateAction<string>>
+) => setState(event.target.value);

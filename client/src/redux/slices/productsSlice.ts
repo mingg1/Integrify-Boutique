@@ -1,7 +1,13 @@
+import { getTokenHeaders } from 'utils/helper';
 import { PRODUCT } from './../../utils/route';
-import { ProductsState, ResError } from './../../utils/types';
+import {
+  Product,
+  ProductInput,
+  ProductsState,
+  ResError,
+} from './../../utils/types';
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios, { AxiosError } from 'axios';
+import axios from 'axios';
 import { PRODUCTS } from 'utils/route';
 
 const initialState: ProductsState = {
@@ -15,7 +21,9 @@ const initialState: ProductsState = {
     size: [],
     quantity: 0,
     thumbnail: '',
+    __v: 0,
   },
+  searched: [],
   isLoading: false,
   error: null,
 };
@@ -28,7 +36,8 @@ export const getProducts = createAsyncThunk(
         await axios.get(PRODUCTS)
       ).data;
     } catch (error) {
-      return rejectWithValue(error);
+      const { message } = error as ResError;
+      return rejectWithValue({ message });
     }
   }
 );
@@ -40,6 +49,43 @@ export const getProduct = createAsyncThunk(
       return await (
         await axios.get(PRODUCT(id))
       ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const addProduct = createAsyncThunk(
+  'products/addProduct',
+  async ({ token, ...input }: ProductInput, { rejectWithValue }) => {
+    try {
+      return await (
+        await axios.post(PRODUCTS, input, getTokenHeaders(token))
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const editProduct = createAsyncThunk(
+  'products/editProduct',
+  async ({ token, _id: id, ...input }: ProductInput, { rejectWithValue }) => {
+    try {
+      return await (
+        await axios.patch(PRODUCT(id!), input, getTokenHeaders(token))
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+export const deleteProduct = createAsyncThunk(
+  'products/deleteProduct',
+  async ({ token, _id: id }: ProductInput, { rejectWithValue }) => {
+    try {
+      await axios.delete(PRODUCT(id!), getTokenHeaders(token));
+      return id;
     } catch (error) {
       return rejectWithValue(error);
     }
@@ -66,9 +112,7 @@ const productsSlice = createSlice({
     });
     builder.addCase(getProducts.rejected, (state, action) => {
       state.isLoading = false;
-      const error = action.payload as AxiosError;
-      const { message, statusCode } = error.response?.data as ResError;
-      state.error = { message, statusCode };
+      state.error = action.payload as ResError;
     });
     builder.addCase(getProduct.pending, (state) => {
       state.isLoading = true;
@@ -79,9 +123,26 @@ const productsSlice = createSlice({
     });
     builder.addCase(getProduct.rejected, (state, action) => {
       state.isLoading = false;
-      const error = action.payload as AxiosError;
-      const { message, statusCode } = error.response?.data as ResError;
-      state.error = { message, statusCode };
+      state.error = action.payload as ResError;
+      // const error = action.payload as AxiosError;
+      // const { message, status } = error.response?.data as ResError;
+      // state.error = { message, status };
+    });
+    builder.addCase(addProduct.fulfilled, (state, action) => {
+      state.products.push(action.payload);
+    });
+    builder.addCase(
+      editProduct.fulfilled,
+      (state, action: { payload: Product }) => {
+        state.products = state.products.map((product) =>
+          product._id === action.payload._id ? action.payload : product
+        );
+      }
+    );
+    builder.addCase(deleteProduct.fulfilled, (state, action) => {
+      state.products = state.products.filter(
+        (product) => product._id !== action.payload
+      );
     });
   },
 });
