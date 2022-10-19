@@ -1,6 +1,7 @@
 import ChangePwForm from 'components/ChangePasswordForm';
 import { Link, Navigate } from 'react-router-dom';
-import { useAppSelector, useCurrentUser } from 'redux/hooks';
+import { useAppSelector } from 'redux/hooks';
+import { useCurrentUser } from 'hooks/hooks';
 
 const ChangePassword = () => {
   const isCurrentUser = useCurrentUser();

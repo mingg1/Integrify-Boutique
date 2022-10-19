@@ -1,5 +1,5 @@
 import { Navigate } from 'react-router-dom';
-import { useCurrentUser } from 'redux/hooks';
+import { useCurrentUser } from 'hooks/hooks';
 import UpdateProfileForm from 'components/UpdateProfileForm';
 
 const EditProfile = () => {

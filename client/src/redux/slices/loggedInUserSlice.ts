@@ -83,8 +83,8 @@ export const loggedInUserSlice = createSlice({
     });
     builder.addCase(localLogin.rejected, (state, action) => {
       const error = action.payload as AxiosError;
-      const { message, statusCode } = error.response?.data as ResError;
-      state.error = { message, statusCode };
+      const { message } = error.response?.data as ResError;
+      state.error = { message };
     });
   },
 });

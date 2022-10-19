@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { BLOCK_USER, USERS } from 'utils/route';
 import { getTokenHeaders } from './../../utils/helper';
@@ -45,7 +45,9 @@ export const toggleBanUser = createAsyncThunk(
       axios.patch(BLOCK_USER(id), { banned }, getTokenHeaders(authToken));
       return { id, banned };
     } catch (error) {
-      rejectWithValue(error);
+      const err = (error as AxiosError).response?.data;
+      const { message } = err as ResError;
+      return rejectWithValue({ message });
     }
   }
 );
@@ -74,8 +76,8 @@ const usersSlice = createSlice({
     builder.addCase(getUsers.rejected, (state, action) => {
       state.isLoading = false;
       const error = action.payload as AxiosError;
-      const { message, statusCode } = error.response?.data as ResError;
-      state.error = { message, statusCode };
+      const { message } = error.response?.data as ResError;
+      state.error = { message };
     });
     builder.addCase(toggleBanUser.fulfilled, (state, { payload }) => {
       const { id, banned } = payload!;

@@ -10,7 +10,11 @@ import {
 import { USER } from 'utils/route';
 import FormField from './FormField';
 import { ResError } from 'utils/types';
-import { clearLocalStorage, getTokenHeaders } from 'utils/helper';
+import {
+  clearLocalStorage,
+  getTokenHeaders,
+  onFieldChange,
+} from 'utils/helper';
 import { deleteUser } from 'redux/slices/usersSlice';
 
 interface LoginFormInputs extends HTMLFormControlsCollection {
@@ -50,9 +54,8 @@ const UpdateProfileForm = () => {
         dispatch(deleteUser(loggedInUser._id));
       }
     } catch (error) {
-      const { message, statusCode } = (error as AxiosError).response
-        ?.data as ResError;
-      dispatch(setLoggedInUserError({ message, statusCode }));
+      const { message } = (error as AxiosError).response?.data as ResError;
+      dispatch(setLoggedInUserError({ message }));
     }
     alert('Account has been deleted');
     navigate('/');
@@ -114,8 +117,9 @@ const UpdateProfileForm = () => {
             name: 'email',
             disabled: loggedInUser.google,
             value: email,
-            onChange: (evt: React.ChangeEvent<HTMLInputElement>) =>
-              setEmail(() => evt.target.value),
+            onChange: (event) => {
+              onFieldChange(event, setEmail);
+            },
           }}
         />
         <button type="submit">Update profile</button>
