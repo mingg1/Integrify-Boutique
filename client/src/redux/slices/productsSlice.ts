@@ -1,6 +1,7 @@
 import { getTokenHeaders } from 'utils/helper';
 import { PRODUCT, SEARCH } from './../../utils/route';
 import {
+  CartItem,
   Product,
   ProductInput,
   ProductsState,
@@ -10,6 +11,7 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { PRODUCTS } from 'utils/route';
 
+const storedCart = localStorage.getItem('cart');
 const initialState: ProductsState = {
   products: [],
   product: {
@@ -24,6 +26,7 @@ const initialState: ProductsState = {
     __v: 0,
   },
   searched: [],
+  cart: storedCart ? JSON.parse(storedCart) : [],
   isLoading: false,
   error: null,
 };
@@ -121,6 +124,34 @@ const productsSlice = createSlice({
         )
       );
     },
+    addToCart: (state, action: { payload: CartItem }) => {
+      const { _id: addedItem, size: addedItemSize, price } = action.payload;
+      const sameItem = state.cart.findIndex(
+        (item) => item._id === addedItem && item.size === addedItemSize
+      );
+      if (sameItem >= 0) {
+        state.cart[sameItem].quantity += 1;
+        state.cart[sameItem].price += price;
+      } else {
+        state.cart.push(action.payload);
+      }
+      localStorage.setItem('cart', JSON.stringify(state.cart));
+      if (state.product) state.product.quantity -= 1;
+    },
+    removeFromCart: (state, action) => {
+      const { addedItem, addedItemSize } = action.payload;
+      const sameItem = state.cart.findIndex(
+        (item) => item._id === addedItem && item.size === addedItemSize
+      );
+      const removedItem = state.cart[sameItem];
+      if (removedItem.quantity > 1) {
+        removedItem.price /= removedItem.quantity;
+        removedItem.quantity -= 1;
+      } else {
+        state.cart = state.cart.filter((item) => item !== state.cart[sameItem]);
+      }
+      localStorage.setItem('cart', JSON.stringify(state.cart));
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(getProducts.pending, (state) => {
@@ -178,5 +209,6 @@ const productsSlice = createSlice({
   },
 });
 
-export const { findProduct, search } = productsSlice.actions;
+export const { findProduct, search, addToCart, removeFromCart } =
+  productsSlice.actions;
 export default productsSlice.reducer;

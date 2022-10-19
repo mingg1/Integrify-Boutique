@@ -11,6 +11,7 @@ import {
   updateUser,
   deleteUser,
   updatePassword,
+  addOrder,
 } from './../controllers/user.controller'
 import { generateAccessToken } from './../controllers/auth.controller'
 import { checkCurrentUser, checkAdmin } from './../middlewares/checkAuth'
@@ -33,5 +34,6 @@ router.patch(
   updatePassword
 )
 router.patch('/:id/block', checkAdmin, updateUser)
+router.route('/:id/orders').post(checkCurrentUser, addOrder)
 
 export default router

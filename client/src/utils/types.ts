@@ -80,8 +80,13 @@ export interface ProductsState {
   products: Product[];
   product: Product | undefined;
   searched: Product[];
+  cart: CartItem[];
   isLoading: boolean;
   error: ResError | null;
+}
+
+export interface CartItem extends Omit<Product, 'size' | '__v'> {
+  size: Size;
 }
 
 type User = Omit<

@@ -2,6 +2,23 @@ import { Request, Response, NextFunction } from 'express'
 import { BadRequestError } from '../helpers/apiError'
 import userService from '../services/user.service'
 
+export const addOrder = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const order = await userService.addOrder(req.params.id, req.body.items)
+    return res.json(order)
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError(error.message, 400, error))
+    } else {
+      next(error)
+    }
+  }
+}
+
 // POST /users
 export const signUp = async (
   req: Request,

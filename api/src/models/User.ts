@@ -21,6 +21,7 @@ export type UserDocument = Document & {
   role: UserRole
   banned: boolean
   permissions?: Permission[]
+  orders: mongoose.Types.ObjectId[]
 }
 
 const userSchema = new mongoose.Schema({
@@ -57,6 +58,16 @@ const userSchema = new mongoose.Schema({
     type: [String],
     enum: Permission,
   },
+  wishlist: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Wishlist',
+  },
+  orders: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Order',
+    },
+  ],
 })
 
 // password encryption before saving a document

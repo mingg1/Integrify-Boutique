@@ -1,6 +1,45 @@
+import Order, { Item, OrderDocument } from './../models/Order'
+import Product from '../models/Product'
 import bcrypt from 'bcrypt'
 import User, { UserDocument } from '../models/User'
 import { NotFoundError, BadRequestError } from '../helpers/apiError'
+import { Types } from 'mongoose'
+
+// const createOrderList = async (
+//   userId: Types.ObjectId
+// ): Promise<OrderDocument> => {
+//   return await Order.create({ user: userId })
+// }
+
+const addOrder = async (
+  userId: string,
+  items: Item[]
+): Promise<OrderDocument> => {
+  const foundUser = await User.findById(userId)
+  if (!foundUser) {
+    throw new NotFoundError(`User ${userId} not found`)
+  }
+  const order = await Order.create({
+    user: userId,
+    items,
+  })
+
+  items.forEach(async (item) => {
+    const foundItem = (await Product.findById(item.productId))?.quantity
+    await Product.findByIdAndUpdate(item.productId, {
+      quantity: foundItem ? foundItem - item.quantity : 0,
+    })
+  })
+
+  foundUser.orders.push(order._id)
+  foundUser.save()
+  return order
+}
+
+const getOrderList = async (userId: string): Promise<OrderDocument | null> => {
+  const orderList = await Order.findOne({ user: userId })
+  return orderList
+}
 
 const create = async (
   userInput: UserDocument & { pwConfirmation: string }
@@ -13,12 +52,23 @@ const create = async (
   if (await User.exists({ email })) {
     throw new BadRequestError('This email is already taken')
   }
-
-  return await User.create({ firstName, lastName, email, password, role })
+  const newUser = await User.create({
+    firstName,
+    lastName,
+    email,
+    password,
+    role,
+  })
+  // const orderList = await createOrderList(newUser._id)
+  // newUser.orders = orderList._id
+  return newUser
 }
 
 const findById = async (userId: string): Promise<Partial<UserDocument>> => {
-  const foundUser = await User.findById(userId, { password: 0 })
+  const foundUser = await User.findById(userId, { password: 0 }).populate({
+    path: 'orders',
+    populate: { path: 'user', model: User },
+  })
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
   }
@@ -35,7 +85,12 @@ const findByEmail = async (
 }
 
 const findAll = async (): Promise<UserDocument[]> => {
-  return User.find({}, { password: 0 }).sort({ name: 1 })
+  return User.find({}, { password: 0 })
+    .sort({ name: 1 })
+    .populate({
+      path: 'orders',
+      populate: { path: 'user', model: User },
+    })
 }
 
 const update = async (
@@ -86,7 +141,7 @@ const updatePassword = async (
 }
 
 const deleteUser = async (userId: string): Promise<UserDocument | null> => {
-  const foundUser = User.findByIdAndDelete(userId)
+  const foundUser = await User.findByIdAndDelete(userId)
   if (!foundUser) {
     throw new NotFoundError(`User ${userId} not found`)
   }
@@ -94,6 +149,8 @@ const deleteUser = async (userId: string): Promise<UserDocument | null> => {
 }
 
 export default {
+  getOrderList,
+  //createOrderList,
   create,
   findById,
   findByEmail,
@@ -101,4 +158,5 @@ export default {
   update,
   deleteUser,
   updatePassword,
+  addOrder,
 }

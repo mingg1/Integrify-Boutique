@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import jwt_decode from 'jwt-decode';
@@ -19,7 +19,10 @@ interface SearchElement extends HTMLFormElement {
 const NavBar = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { loggedInUser } = useAppSelector((state) => state);
+  const {
+    loggedInUser,
+    productsData: { cart },
+  } = useAppSelector((state) => state);
   const storedToken = localStorage.getItem('userToken') || '';
   const decodedToken: LoggedInUserState | null = storedToken
     ? jwt_decode(storedToken)
@@ -83,17 +86,20 @@ const NavBar = () => {
           </li>
         )}
         <li>
-          <>
-            <form onSubmit={onSearch}>
-              <input
-                type="text"
-                placeholder="search"
-                name="search"
-                value={query}
-                onChange={(event) => onFieldChange(event, setQuery)}
-              />
-            </form>
-          </>
+          <form onSubmit={onSearch}>
+            <input
+              type="text"
+              placeholder="search"
+              name="search"
+              value={query}
+              onChange={(event) => onFieldChange(event, setQuery)}
+            />
+          </form>
+        </li>
+        <li>
+          <Link to="/cart">
+            Cart ({cart.reduce((prev, item) => prev + item.quantity, 0)})
+          </Link>
         </li>
       </ul>
     </nav>
