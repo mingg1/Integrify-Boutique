@@ -32,6 +32,14 @@ const search = async (query: string): Promise<ProductDocument[]> => {
   return filtered
 }
 
+const filterByCategory = async (
+  category: string
+): Promise<ProductDocument[]> => {
+  //text index?
+  const products = await Product.find({ category }).sort({ name: 1 })
+  return products
+}
+
 const update = async (
   productId: string,
   update: Partial<ProductDocument>
@@ -66,4 +74,5 @@ export default {
   update,
   deleteProduct,
   search,
+  filterByCategory,
 }

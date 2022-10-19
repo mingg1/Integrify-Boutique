@@ -20,11 +20,19 @@ const Home = () => {
       ) : error ? (
         <p>{error.message}</p>
       ) : (
-        products.map((product) => (
-          <Link to={`/products/${product._id}`} key={product._id}>
-            {product.name}
-          </Link>
-        ))
+        <main>
+          <section className="home_banner">
+            <h1>Winter with __</h1>
+            <h2>Prepare winter with us</h2>
+            <Link to={'products'}>See products</Link>
+          </section>
+          {products.map((product) => (
+            <Link to={`/products/${product._id}`} key={product._id}>
+              {/* {product.name} */}
+              <img src={product.thumbnail} alt={product.name} />
+            </Link>
+          ))}
+        </main>
       )}
     </>
   );

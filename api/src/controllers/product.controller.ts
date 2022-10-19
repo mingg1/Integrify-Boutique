@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express'
-import Product from '../models/Product'
 import productService from '../services/product.service'
 import { BadRequestError } from '../helpers/apiError'
 
@@ -21,7 +20,7 @@ export const addProduct = async (
   }
 }
 
-// PUT /products/:id
+// PATCH /products/:id
 export const updateProduct = async (
   req: Request,
   res: Response,
@@ -83,7 +82,49 @@ export const getAllProducts = async (
   next: NextFunction
 ) => {
   try {
+    const { category } = req.query
+    if (category) {
+      return res.json(
+        await productService.filterByCategory((category as string) || '')
+      )
+    }
     return res.json(await productService.findAll())
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', 400, error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+export const search = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { query } = req.query
+    return res.json(await productService.search((query as string) || ''))
+  } catch (error) {
+    if (error instanceof Error && error.name == 'ValidationError') {
+      next(new BadRequestError('Invalid Request', 400, error))
+    } else {
+      next(error)
+    }
+  }
+}
+
+export const filterByCategory = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const { category } = req.query
+    return res.json(
+      await productService.filterByCategory((category as string) || '')
+    )
   } catch (error) {
     if (error instanceof Error && error.name == 'ValidationError') {
       next(new BadRequestError('Invalid Request', 400, error))
