@@ -3,19 +3,17 @@ import { useEffect, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from 'redux/hooks';
 import { getProducts } from 'redux/slices/productsSlice';
-import { ProductCategory } from 'utils/types';
+import { Product, ProductCategory } from 'utils/types';
 
 const Products = () => {
   const dispatch = useAppDispatch();
   const [searchParam] = useSearchParams();
-  const [category, setCategory] = useState(
-    () => searchParam.get('category') || ''
-  );
+  const [category, setCategory] = useState(searchParam.get('category') || '');
 
   const {
     productsData: { products, isLoading, error },
   } = useAppSelector((state) => state);
-  const [filtered, setFiltered] = useState(products);
+  const [filtered, setFiltered] = useState<Product[] | null>(products);
 
   useEffect(() => {
     if (products.length === 0) dispatch(getProducts());
@@ -25,6 +23,8 @@ const Products = () => {
           item.category.includes(category as ProductCategory)
         )
       );
+    } else {
+      setFiltered(null);
     }
     if (searchParam.get('category') !== category) {
       setCategory(() => searchParam.get('category') || '');
@@ -33,29 +33,41 @@ const Products = () => {
 
   return (
     <main>
-      <h1>
-        {category ? `${category}: ${filtered.length} item(s)` : 'Products'}
+      <h1 className="page__title">
+        {category ? `${category.toUpperCase()}` : 'PRODUCTS'}
       </h1>
-      <div>
-        {Object.values(ProductCategory).map((category) => (
-          <Link key={category} to={`?category=${category}`}>
-            {category}
+      <div className="page__category-list">
+        {Object.values(ProductCategory).map((categoryItem) => (
+          <Link
+            key={categoryItem}
+            to={`?category=${categoryItem}`}
+            className={category === categoryItem ? 'selected' : undefined}
+          >
+            {categoryItem.toUpperCase()}
           </Link>
         ))}
-        <Link key={'all'} to={``}>
-          All
+        <Link
+          key={'all'}
+          to={``}
+          className={category === '' ? 'selected' : undefined}
+        >
+          ALL
         </Link>
       </div>
+      <hr />
       {isLoading ? (
         <p>Loading ...</p>
       ) : error ? (
         <p>{error.message}</p>
       ) : (
-        <section>
-          {filtered.map((product) => (
-            <ItemCard key={product._id} product={product} />
-          ))}
-        </section>
+        <>
+          <p>{filtered ? filtered.length : products.length} ITEMS</p>
+          <section className="product-list">
+            {(filtered || products).map((product) => (
+              <ItemCard key={product._id} product={product} />
+            ))}
+          </section>
+        </>
       )}
     </main>
   );
