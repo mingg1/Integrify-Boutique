@@ -130,8 +130,8 @@ const productsSlice = createSlice({
         (item) => item._id === addedItem && item.size === addedItemSize
       );
       if (sameItem >= 0) {
-        state.cart[sameItem].quantity += 1;
         state.cart[sameItem].price += price;
+        state.cart[sameItem].quantity += 1;
       } else {
         state.cart.push(action.payload);
       }
@@ -139,13 +139,13 @@ const productsSlice = createSlice({
       if (state.product) state.product.quantity -= 1;
     },
     removeFromCart: (state, action) => {
-      const { addedItem, addedItemSize } = action.payload;
+      const { addedItem, addedItemSize, price } = action.payload;
       const sameItem = state.cart.findIndex(
         (item) => item._id === addedItem && item.size === addedItemSize
       );
       const removedItem = state.cart[sameItem];
       if (removedItem.quantity > 1) {
-        removedItem.price /= removedItem.quantity;
+        removedItem.price -= price;
         removedItem.quantity -= 1;
       } else {
         state.cart = state.cart.filter((item) => item !== state.cart[sameItem]);
