@@ -16,6 +16,9 @@ import EditProduct from 'pages/EditProduct';
 import ProductList from 'pages/ProductList';
 import Search from 'pages/Search';
 import Products from 'pages/Products';
+import Order from 'pages/Order';
+import OrderDetail from 'pages/OrderDetail';
+import Orders from 'pages/Orders';
 
 const App = () => {
   return (
@@ -35,6 +38,8 @@ const App = () => {
           />
           <Route path="/products" element={<Products />} />
           <Route path="/products/:id" element={<Product />} />
+          <Route path="/users/:id/orders" element={<Order />} />
+          <Route path="/orders/:id" element={<OrderDetail />} />
           <Route
             path="/admin/products/add"
             element={
@@ -57,6 +62,14 @@ const App = () => {
             element={
               <AdminRoute>
                 <UserList />
+              </AdminRoute>
+            }
+          />
+          <Route
+            path="/admin/orders"
+            element={
+              <AdminRoute>
+                <Orders />
               </AdminRoute>
             }
           />
