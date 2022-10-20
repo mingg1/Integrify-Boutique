@@ -2,8 +2,9 @@ import mongoose, { Document } from 'mongoose'
 import { ProductDocument, Size } from './Product'
 
 export interface Item {
-  productId: string
+  product: mongoose.Types.ObjectId
   quantity: number
+  size: Size
 }
 
 export type OrderDocument = Document & {
@@ -21,8 +22,13 @@ const orderSchema = new mongoose.Schema({
   items: {
     type: [
       {
-        productId: String,
-        quantity: Number,
+        product: {
+          type: mongoose.Types.ObjectId,
+          ref: 'Product',
+          required: true,
+        },
+        quantity: { type: Number, required: true },
+        size: { type: String, enum: Size, required: true },
       },
     ],
     required: true,

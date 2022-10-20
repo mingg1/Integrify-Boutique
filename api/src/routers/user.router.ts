@@ -12,6 +12,8 @@ import {
   deleteUser,
   updatePassword,
   addOrder,
+  getUserOrders,
+  getAllOrders,
 } from './../controllers/user.controller'
 import { generateAccessToken } from './../controllers/auth.controller'
 import { checkCurrentUser, checkAdmin } from './../middlewares/checkAuth'
@@ -22,6 +24,7 @@ router
   .route('/')
   .get(checkAdmin, getAllUsers)
   .post(validate(signUpSchema), signUp)
+router.get('/orders', getAllOrders)
 router
   .route('/:id')
   .get(getUserById)
@@ -34,6 +37,10 @@ router.patch(
   updatePassword
 )
 router.patch('/:id/block', checkAdmin, updateUser)
-router.route('/:id/orders').post(checkCurrentUser, addOrder)
+
+router
+  .route('/:id/orders')
+  .post(checkCurrentUser, addOrder)
+  .get(checkCurrentUser, getUserOrders)
 
 export default router

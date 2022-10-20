@@ -25,19 +25,35 @@ const addOrder = async (
   })
 
   items.forEach(async (item) => {
-    const foundItem = (await Product.findById(item.productId))?.quantity
-    await Product.findByIdAndUpdate(item.productId, {
+    const foundItem = (await Product.findById(item.product))?.quantity
+    await Product.findByIdAndUpdate(item.product, {
       quantity: foundItem ? foundItem - item.quantity : 0,
     })
   })
 
   foundUser.orders.push(order._id)
   foundUser.save()
-  return order
+  return order.populate([
+    'user',
+    { path: 'items', populate: { path: 'product' } },
+  ])
 }
 
-const getOrderList = async (userId: string): Promise<OrderDocument | null> => {
-  const orderList = await Order.findOne({ user: userId })
+const getOrderList = async (
+  userId: string
+): Promise<OrderDocument[] | null> => {
+  const orderList = await Order.find({ user: userId }).populate([
+    'user',
+    { path: 'items', populate: { path: 'product' } },
+  ])
+  return orderList
+}
+
+const getAllOrders = async (): Promise<OrderDocument[] | null> => {
+  const orderList = await Order.find().populate([
+    'user',
+    { path: 'items', populate: { path: 'product' } },
+  ])
   return orderList
 }
 
@@ -149,8 +165,6 @@ const deleteUser = async (userId: string): Promise<UserDocument | null> => {
 }
 
 export default {
-  getOrderList,
-  //createOrderList,
   create,
   findById,
   findByEmail,
@@ -159,4 +173,6 @@ export default {
   deleteUser,
   updatePassword,
   addOrder,
+  getOrderList,
+  getAllOrders,
 }
