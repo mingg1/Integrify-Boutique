@@ -32,17 +32,28 @@ const EditProduct = () => {
   }, [dispatch, id]);
 
   return (
-    <>
-      <ProductForm product={product} submitAction={editAction} />
-      <button
-        onClick={() => {
-          dispatch(deleteProduct({ _id: id, token }));
-          navigate(-1);
-        }}
-      >
-        Delete product
-      </button>
-    </>
+    <main style={{ marginBottom: '6rem' }}>
+      <h1 className="page__title">Edit product</h1>
+      <section className="product-form__container">
+        <figure>
+          <img src={product?.thumbnail} alt={product?.name} />
+        </figure>
+        <ProductForm
+          product={product}
+          submitAction={editAction}
+          editMode={true}
+        />
+        <button
+          className="delete-button"
+          onClick={() => {
+            dispatch(deleteProduct({ _id: id, token }));
+            navigate(-1);
+          }}
+        >
+          Delete product
+        </button>
+      </section>
+    </main>
   );
 };
 

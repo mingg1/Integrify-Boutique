@@ -13,20 +13,47 @@ const ProductList = () => {
     if (productsData.products.length === 0) dispatch(getProducts());
   }, [dispatch, productsData.products]);
 
-  return productsData.isLoading ? (
-    <p>Loading...</p>
-  ) : productsData.error ? (
-    <p>{productsData.error.message}</p>
-  ) : (
-    <section>
-      <Link to="add">Add product</Link>
-      {productsData.products.map((product) => (
-        <div key={product._id}>
-          <p>{product.name}</p>
-          <Link to={`${product._id}/edit`}>edit</Link>
-        </div>
-      ))}
-    </section>
+  return (
+    <main style={{ marginBottom: '6rem' }}>
+      <h1 className="page__title">Products ({productsData.products.length})</h1>
+      <section>
+        {productsData.isLoading ? (
+          <p>Loading...</p>
+        ) : productsData.error ? (
+          <p>{productsData.error.message}</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <Link className="add-button" to="add">
+              Add product
+            </Link>
+            <ul className="products">
+              {productsData.products.map((item) => (
+                <li key={item._id} className="cart-item">
+                  <div className="cart-item__info">
+                    <img
+                      src={item.thumbnail}
+                      alt={item.name}
+                      style={{ width: 100, height: 100, objectFit: 'cover' }}
+                    />
+                    <div className="cart-item__info__text">
+                      <p>{item.name}</p>
+                      <p>{item.price} €</p>
+                      <p>Quantity: {item.quantity} pcs</p>
+                      <p>Size: {item.size.join(' / ')}</p>
+                      <p>Category: {item.category.join(' / ')}</p>
+                    </div>
+                    <Link className="edit-button" to={`${item._id}/edit`}>
+                      edit
+                    </Link>
+                  </div>
+                  <hr />
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </section>
+    </main>
   );
 };
 

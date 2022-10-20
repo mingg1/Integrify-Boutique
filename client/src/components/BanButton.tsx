@@ -15,7 +15,9 @@ const BanButton = ({ id, banned, authToken }: BanButtonProps) => {
   };
 
   return (
-    <button onClick={toggleBanned}>{banned ? 'banned' : 'unbanned'}</button>
+    <button onClick={toggleBanned} className={banned ? 'banned' : 'unbanned'}>
+      {banned ? 'banned' : 'unbanned'}
+    </button>
   );
 };
 export default BanButton;
