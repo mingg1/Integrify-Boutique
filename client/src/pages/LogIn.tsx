@@ -10,11 +10,16 @@ const LogIn = () => {
   return userId !== '' ? (
     <Navigate to="/" />
   ) : (
-    <>
+    <main>
+      <h1 className="page__title">Log in</h1>
       <LoginForm />
-      <p>Already have an account?</p>
-      <Link to={'/signup'}>Sing up here</Link>
-    </>
+      <div className="auth-link__container">
+        <p>Already have an account?</p>
+        <Link className="auth-link" to={'/signup'}>
+          Sing up here
+        </Link>
+      </div>
+    </main>
   );
 };
 

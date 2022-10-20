@@ -39,7 +39,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className="signup-form">
       <FormField
         label="First name"
         input={{

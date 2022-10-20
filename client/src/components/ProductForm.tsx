@@ -32,9 +32,10 @@ const getCheckedFields = (elements: ProductFormInputs, className: string) =>
 interface ProductFormProps {
   product?: Product;
   submitAction?: (input: ProductInput) => Promise<void>;
+  editMode: boolean;
 }
 
-const ProductForm = ({ product, submitAction }: ProductFormProps) => {
+const ProductForm = ({ product, submitAction, editMode }: ProductFormProps) => {
   const { token } = useAppSelector((state) => state.loggedInUser);
 
   const [urlField, setUrlField] = useState<boolean>(true);
@@ -65,12 +66,6 @@ const ProductForm = ({ product, submitAction }: ProductFormProps) => {
 
     console.log(input);
     await submitAction?.(input);
-    // const resultAction = await dispatch(addProduct(input));
-
-    // if (addProduct.fulfilled.match(resultAction)) {
-    //   alert('Product added! ✨🛍');
-    //   navigate(-1);
-    // }
   };
 
   return (
@@ -114,26 +109,26 @@ const ProductForm = ({ product, submitAction }: ProductFormProps) => {
           value: product?.quantity?.toString(),
         }}
       />
-
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          setUrlField(true);
-          setUploadField(false);
-        }}
-      >
-        url
-      </button>
-      <button
-        onClick={(event) => {
-          event.preventDefault();
-          setUrlField(false);
-          setUploadField(true);
-        }}
-      >
-        upload
-      </button>
-
+      <div className="product-form__thumbnail-btn__container">
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setUrlField(true);
+            setUploadField(false);
+          }}
+        >
+          url
+        </button>
+        <button
+          onClick={(event) => {
+            event.preventDefault();
+            setUrlField(false);
+            setUploadField(true);
+          }}
+        >
+          upload
+        </button>
+      </div>
       {urlField ? (
         <FormField
           label="Thumbnail"
@@ -152,7 +147,7 @@ const ProductForm = ({ product, submitAction }: ProductFormProps) => {
         options={ProductCategory}
       />
       <Checkbox property={product?.size} label="Sizes" options={Size} />
-      <button type="submit">Add Product</button>
+      <button type="submit">{editMode ? 'Edit Product' : 'Add Product'}</button>
     </form>
   );
 };

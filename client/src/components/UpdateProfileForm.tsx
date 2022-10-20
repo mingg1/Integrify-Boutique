@@ -90,8 +90,7 @@ const UpdateProfileForm = () => {
   };
 
   return (
-    <>
-      <p>{loggedInUser.error?.message}</p>
+    <div className="edit-profile-form__container">
       <form onSubmit={handleUpdate}>
         <FormField
           label="First name"
@@ -124,8 +123,10 @@ const UpdateProfileForm = () => {
         />
         <button type="submit">Update profile</button>
       </form>
-      <button onClick={onDeleteAccount}>Delete account</button>
-    </>
+      <button className="delete-button" onClick={onDeleteAccount}>
+        Delete account
+      </button>
+    </div>
   );
 };
 export default UpdateProfileForm;

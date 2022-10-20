@@ -15,18 +15,21 @@ const Checkbox = ({
   return (
     <fieldset>
       <legend>{label}</legend>
-      {Object.values(options).map((value) => (
-        <FormField
-          className={label.toLowerCase()}
-          key={value}
-          label={value}
-          input={{
-            name: value,
-            type: 'checkbox',
-            checked: property?.some((item) => item === value),
-          }}
-        />
-      ))}
+      <div className="checkbox">
+        {Object.values(options).map((value) => (
+          <FormField
+            className={label.toLowerCase()}
+            key={value}
+            label={value}
+            input={{
+              id: value,
+              name: value,
+              type: 'checkbox',
+              checked: property?.some((item) => item === value),
+            }}
+          />
+        ))}
+      </div>
     </fieldset>
   );
 };

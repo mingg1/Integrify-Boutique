@@ -32,13 +32,18 @@ const FormField = ({ label, className, input }: FormFieldProps) => {
   };
 
   return (
-    <div>
-      <label htmlFor={input.name}>{label}</label>
+    <div className={input.type === 'radio' ? 'size-button' : undefined}>
+      <label
+        htmlFor={input.id}
+        className={!input.disabled ? 'available' : undefined}
+      >
+        {label}
+      </label>
       <input
         className={className}
         type={input.type}
         placeholder={input.placeholder}
-        id={input.name}
+        id={input.id}
         name={input.name}
         required={input.required || false}
         value={value}

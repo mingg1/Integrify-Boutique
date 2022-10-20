@@ -4,6 +4,8 @@ import { Provider } from 'react-redux';
 import App from 'components/App';
 import { store } from 'redux/store';
 import { GoogleOAuthProvider } from '@react-oauth/google';
+import './styles/reset.css';
+import './styles/style.css';
 
 const container = document.getElementById('root')!;
 const root = createRoot(container);

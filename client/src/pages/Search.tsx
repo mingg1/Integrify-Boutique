@@ -13,32 +13,31 @@ const Search = () => {
   } = useAppSelector((state) => state);
 
   useEffect(() => {
-    if (products.length === 0) dispatch(searchProduct(query));
-    dispatch(search(query));
+    products.length === 0
+      ? dispatch(searchProduct(query))
+      : dispatch(search(query));
   }, [dispatch, products, query]);
 
   return (
-    <>
+    <main>
       {isLoading ? (
         <p>Loading ...</p>
       ) : error ? (
         <p>{error.message}</p>
       ) : (
-        <>
-          <main>
-            <h1>
-              Search results for '{searchParam.get('query')}' ({searched.length}
-              )
-            </h1>
-            <section>
-              {searched.map((product) => (
-                <ItemCard key={product._id} product={product} />
-              ))}
-            </section>
-          </main>
-        </>
+        <main>
+          <h1>
+            Search results for '{searchParam.get('query')}' ({searched.length})
+          </h1>
+          <hr />
+          <section className="product-list">
+            {searched.map((product) => (
+              <ItemCard key={product._id} product={product} />
+            ))}
+          </section>
+        </main>
       )}
-    </>
+    </main>
   );
 };
 

@@ -10,11 +10,16 @@ const SignUp = () => {
   return userId !== '' ? (
     <Navigate to="/" />
   ) : (
-    <>
+    <main style={{ marginBottom: '6rem' }}>
+      <h1 className="page__title">Sign up</h1>
       <SignupForm />
-      <p>Already have an account?</p>
-      <Link to={'/login'}>Log in here</Link>
-    </>
+      <div className="auth-link__container">
+        <p>Already have an account?</p>
+        <Link className="auth-link" to={'/login'}>
+          Log in here
+        </Link>
+      </div>
+    </main>
   );
 };
 

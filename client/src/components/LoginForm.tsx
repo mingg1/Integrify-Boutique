@@ -31,7 +31,7 @@ const LoginForm = () => {
   };
 
   return (
-    <form onSubmit={handleLogin}>
+    <form onSubmit={handleLogin} className="login-form">
       <FormField
         label="Email"
         input={{
@@ -52,8 +52,8 @@ const LoginForm = () => {
       />
       <button type="submit">Log in</button>
       <hr />
-      <p>{loggedInUser.error?.message}</p>
-      <div>
+      {loggedInUser.error ? <p>{loggedInUser.error.message}</p> : null}
+      <div className="google-login__container">
         <p>Login by google</p>
         <GoogleLoginBtn />
       </div>
