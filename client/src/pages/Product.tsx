@@ -14,6 +14,7 @@ const Product = () => {
   const dispatch = useAppDispatch();
   const {
     productsData: { products, product, isLoading, error },
+    loggedInUser: { banned },
   } = useAppSelector((state) => state);
   const { id } = useParams();
   const [selectedSize, setSize] = useState<Size | undefined>(undefined);
@@ -47,8 +48,8 @@ const Product = () => {
           <div className="product__info">
             <h1 className="product__name">{product.name}</h1>
             <h2 className="product__price">{product.price} €</h2>
-            <p>{product.description}</p>
-            <h3>Size</h3>
+            <hr />
+            <p className="product__description">{product.description}</p>
             <form
               onSubmit={(evt) => {
                 evt.preventDefault();
@@ -62,29 +63,39 @@ const Product = () => {
                   );
               }}
             >
-              {Object.values(Size).map((size) => (
-                <FormField
-                  key={size}
-                  label={size}
-                  input={{
-                    type: 'radio',
-                    name: 'size',
-                    value: size,
-                    checked: product.quantity <= 0,
-                    disabled:
-                      product.quantity <= 0 || !product.size.includes(size),
-                    required: true,
-                    onChange: (evt) => {
-                      setSize(evt.target.value as Size);
-                    },
-                  }}
-                />
-              ))}
-              <button type="submit" disabled={product.quantity <= 0}>
+              <h3>Size</h3>
+              <div className="product__size-list">
+                {Object.values(Size).map((size) => (
+                  <FormField
+                    key={size}
+                    label={size}
+                    input={{
+                      type: 'radio',
+                      name: 'size',
+                      id: size,
+                      value: size,
+                      checked: product.quantity <= 0,
+                      disabled:
+                        product.quantity <= 0 || !product.size.includes(size),
+                      required: true,
+                      onChange: (evt) => {
+                        setSize(evt.target.value as Size);
+                      },
+                    }}
+                  />
+                ))}
+              </div>
+              <button type="submit" disabled={product.quantity <= 0 || banned}>
                 Add to bag
               </button>
             </form>
-            <button onClick={addFavorite}>Add to favorites</button>
+            <button
+              disabled={banned}
+              className="wishlist__button"
+              onClick={addFavorite}
+            >
+              Add to wishlist
+            </button>
           </div>
         </section>
       ) : (
