@@ -49,6 +49,18 @@ export interface ProductInput extends Partial<Product> {
   token: string;
 }
 
+export interface OrderedItem {
+  product: any;
+  quantity: number;
+  size: Size;
+}
+
+export interface Order {
+  _id: string;
+  user: string;
+  items: OrderedItem[];
+}
+
 export interface LoggedInUserState {
   _id: string;
   firstName: string;
@@ -61,6 +73,7 @@ export interface LoggedInUserState {
   google: boolean;
   token: string;
   permissions: Permission[];
+  orders: Order[];
   error: ResError | null;
 }
 

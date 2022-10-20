@@ -5,12 +5,12 @@ export const saveLoggedInUser = (token: string): LoggedInUserState => {
   const userInfo: LoggedInUserState = jwt_decode(token);
   localStorage.setItem('userToken', token);
   localStorage.setItem('loggedInUser', JSON.stringify(userInfo));
-  return { ...userInfo, token, error: null };
+  return { ...userInfo, token, error: null, orders: [] };
 };
 
 export const getStoredUser = (): LoggedInUserState => {
   const storedUser = localStorage.getItem('loggedInUser');
-  return storedUser && JSON.parse(storedUser);
+  return storedUser && { ...JSON.parse(storedUser), orders: [] };
 };
 
 export const getUserToken = (): string => {
@@ -20,6 +20,7 @@ export const getUserToken = (): string => {
 export const clearLocalStorage = () => {
   localStorage.removeItem('userToken');
   localStorage.removeItem('loggedInUser');
+  localStorage.removeItem('cart');
 };
 
 export const getTokenHeaders = (token: string) => ({

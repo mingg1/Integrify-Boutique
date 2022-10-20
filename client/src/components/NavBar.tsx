@@ -55,7 +55,9 @@ const NavBar = () => {
         decodedToken.exp * 1000 > Date.now() &&
         loggedInUser._id === ''
       ) {
-        dispatch(getLoggedInUser({ ...decodedToken, token: storedToken }));
+        dispatch(
+          getLoggedInUser({ ...decodedToken, token: storedToken, orders: [] })
+        );
       }
     }
   }, [decodedToken, dispatch, loggedInUser._id, storedToken]);
@@ -64,7 +66,26 @@ const NavBar = () => {
     <nav>
       <ul>
         <li>
-          <Link to="/">Main page</Link>
+          <Link to="/">Integrify</Link>
+        </li>
+        <li>
+          <Link to="/products">Products</Link>
+        </li>
+        <li>
+          <form onSubmit={onSearch}>
+            <input
+              type="text"
+              placeholder="search"
+              name="search"
+              value={query}
+              onChange={(event) => onFieldChange(event, setQuery)}
+            />
+          </form>
+        </li>
+        <li>
+          <Link to="/cart">
+            Cart ({cart.reduce((prev, item) => prev + item.quantity, 0)})
+          </Link>
         </li>
         <li>
           {decodedToken ? (
@@ -85,22 +106,6 @@ const NavBar = () => {
             </Link>
           </li>
         )}
-        <li>
-          <form onSubmit={onSearch}>
-            <input
-              type="text"
-              placeholder="search"
-              name="search"
-              value={query}
-              onChange={(event) => onFieldChange(event, setQuery)}
-            />
-          </form>
-        </li>
-        <li>
-          <Link to="/cart">
-            Cart ({cart.reduce((prev, item) => prev + item.quantity, 0)})
-          </Link>
-        </li>
       </ul>
     </nav>
   );

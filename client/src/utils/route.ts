@@ -11,3 +11,5 @@ export const USER = (id: string) => `${URL_BASE}/users/${id}`;
 export const BLOCK_USER = (id: string) => `${URL_BASE}/users/${id}/block`;
 export const CHANGE_PASSWORD = (id: string) =>
   `${URL_BASE}/users/${id}/change-password`;
+export const USER_ORDERS = (id: string) => `${URL_BASE}/users/${id}/orders`;
+export const USERS_ORDERS = `${URL_BASE}/users/orders`;

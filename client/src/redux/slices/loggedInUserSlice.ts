@@ -22,6 +22,7 @@ const initialState: LoggedInUserState = {
   exp: 0,
   iat: 0,
   token: '',
+  orders: [],
   error: null,
 };
 
@@ -70,6 +71,13 @@ export const loggedInUserSlice = createSlice({
     setLoggedInUserError: (state, action) => {
       state.error = action.payload;
     },
+    addOrder: (state, action) => {
+      state.orders.push(action.payload);
+    },
+    getOrders: (state, action) => {
+      console.log(action.payload);
+      state.orders = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder.addCase(loginByGoogle.fulfilled, (_, action) => {
@@ -94,5 +102,7 @@ export const {
   clearLoggedInUser,
   updateLoggedInUser,
   setLoggedInUserError,
+  addOrder: addUserOrder,
+  getOrders: getUserOrder,
 } = loggedInUserSlice.actions;
 export default loggedInUserSlice.reducer;

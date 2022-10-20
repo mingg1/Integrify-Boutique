@@ -2,7 +2,13 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios, { AxiosError } from 'axios';
 import { BLOCK_USER, USERS } from 'utils/route';
 import { getTokenHeaders } from './../../utils/helper';
-import { UserRole, UsersState, ResError } from './../../utils/types';
+import { USER_ORDERS, USERS_ORDERS } from './../../utils/route';
+import {
+  UserRole,
+  UsersState,
+  ResError,
+  OrderedItem,
+} from './../../utils/types';
 
 const initialState: UsersState = {
   users: [],
@@ -14,6 +20,7 @@ const initialState: UsersState = {
     role: UserRole.Customer,
     banned: false,
     permissions: [],
+    orders: [],
   },
   isLoading: false,
   error: null,
@@ -52,9 +59,62 @@ export const toggleBanUser = createAsyncThunk(
   }
 );
 
-export const getProduct = createAsyncThunk(
-  'users/getUser',
-  async (id: string, { rejectWithValue }) => {}
+export const addOrder = createAsyncThunk(
+  'users/addOrder',
+  async (
+    {
+      id,
+      authToken,
+      order,
+    }: { id: string; order: OrderedItem[]; authToken: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      return await (
+        await axios.post(
+          USER_ORDERS(id),
+          { items: order },
+          getTokenHeaders(authToken)
+        )
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const getAllOrders = createAsyncThunk(
+  'users/getAllOrders',
+  async (_, { rejectWithValue }) => {
+    try {
+      return await (
+        await axios.get(USERS_ORDERS)
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const getOrders = createAsyncThunk(
+  'users/getOrders',
+  async (
+    { id, authToken }: { id: string; authToken: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      console.log(
+        await (
+          await axios.get(USER_ORDERS(id), getTokenHeaders(authToken))
+        ).data
+      );
+      return await (
+        await axios.get(USER_ORDERS(id), getTokenHeaders(authToken))
+      ).data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
 );
 
 const usersSlice = createSlice({
@@ -85,6 +145,16 @@ const usersSlice = createSlice({
         if (user._id === id) return { ...user, banned };
         return user;
       });
+    });
+    builder.addCase(addOrder.fulfilled, (state, { payload }) => {
+      state.user?.orders.push(payload);
+      localStorage.removeItem('cart');
+    });
+    builder.addCase(getOrders.fulfilled, (state, { payload }) => {
+      return payload;
+    });
+    builder.addCase(getAllOrders.fulfilled, (state, { payload }) => {
+      return payload;
     });
   },
 });
