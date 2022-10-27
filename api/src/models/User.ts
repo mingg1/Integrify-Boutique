@@ -62,12 +62,10 @@ const userSchema = new mongoose.Schema({
     type: mongoose.Types.ObjectId,
     ref: 'Wishlist',
   },
-  orders: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'Order',
-    },
-  ],
+  orders: {
+    type: [mongoose.Types.ObjectId],
+    ref: 'Order',
+  },
 })
 
 // password encryption before saving a document

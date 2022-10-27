@@ -1,15 +1,19 @@
-import Order, { Item, OrderDocument } from './../models/Order'
-import Product from '../models/Product'
 import bcrypt from 'bcrypt'
 import User, { UserDocument } from '../models/User'
+import Product from '../models/Product'
+import Order, { Item, OrderDocument } from './../models/Order'
 import { NotFoundError, BadRequestError } from '../helpers/apiError'
-import { Types } from 'mongoose'
 
 // const createOrderList = async (
 //   userId: Types.ObjectId
 // ): Promise<OrderDocument> => {
 //   return await Order.create({ user: userId })
 // }
+
+export type CreateUserInput = Pick<
+  UserDocument,
+  'firstName' | 'lastName' | 'email' | 'password'
+> & { pwConfirmation: string }
 
 const addOrder = async (
   userId: string,
@@ -57,11 +61,8 @@ const getAllOrders = async (): Promise<OrderDocument[] | null> => {
   return orderList
 }
 
-const create = async (
-  userInput: UserDocument & { pwConfirmation: string }
-): Promise<UserDocument> => {
-  const { firstName, lastName, email, password, pwConfirmation, role } =
-    userInput
+const create = async (userInput: CreateUserInput): Promise<UserDocument> => {
+  const { firstName, lastName, email, password, pwConfirmation } = userInput
   if (password !== pwConfirmation) {
     throw new BadRequestError('Password confirmation does not match')
   }
@@ -73,7 +74,6 @@ const create = async (
     lastName,
     email,
     password,
-    role,
   })
   // const orderList = await createOrderList(newUser._id)
   // newUser.orders = orderList._id
@@ -111,7 +111,7 @@ const findAll = async (): Promise<UserDocument[]> => {
 
 const update = async (
   userId: string,
-  update: Partial<UserDocument> & { pwConfirmation: string }
+  update: Partial<UserDocument>
 ): Promise<UserDocument | null> => {
   if (await User.exists({ email: update.email })) {
     throw new BadRequestError('This email is already taken')

@@ -7,11 +7,9 @@ const create = async (product: ProductDocument): Promise<ProductDocument> => {
 
 const findById = async (productId: string): Promise<ProductDocument> => {
   const foundProduct = await Product.findById(productId)
-
   if (!foundProduct) {
     throw new NotFoundError(`Product ${productId} not found!`)
   }
-
   return foundProduct
 }
 
