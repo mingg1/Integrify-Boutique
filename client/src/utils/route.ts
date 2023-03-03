@@ -1,4 +1,4 @@
-const URL_BASE = 'http://localhost:4000/api/v1';
+const URL_BASE = 'https://integrify-boutique-production.up.railway.app/api/v1';
 export const SIGNUP = `${URL_BASE}/users`;
 export const LOGIN_LOCAL = `${URL_BASE}/auth/login`;
 export const LOGIN_GOOGLE = `${URL_BASE}/auth/login-google`;
