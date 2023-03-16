@@ -8,7 +8,7 @@ import {
   getProduct,
   getProducts,
 } from 'redux/slices/productsSlice';
-import { Size } from 'utils/types';
+import { ProductSize, Size } from 'utils/types';
 
 const Product = () => {
   const dispatch = useAppDispatch();
@@ -17,7 +17,9 @@ const Product = () => {
     loggedInUser: { banned },
   } = useAppSelector((state) => state);
   const { id } = useParams();
-  const [selectedSize, setSize] = useState<Size | undefined>(undefined);
+  const [selectedSize, setSize] = useState<Partial<ProductSize> | undefined>(
+    undefined
+  );
 
   useEffect(() => {
     if (id && products.length === 0) {
@@ -41,8 +43,8 @@ const Product = () => {
           <figure>
             <img
               className="product__thumbnail"
-              alt={product?.name}
-              src={product?.thumbnail}
+              alt={product.name}
+              src={product.thumbnail}
             />
           </figure>
           <div className="product__info">
@@ -58,7 +60,7 @@ const Product = () => {
                     addToCart({
                       ...product,
                       size: selectedSize,
-                      quantity: 1,
+                      cartQuantity: 1,
                     })
                   );
               }}
@@ -73,29 +75,37 @@ const Product = () => {
                       type: 'radio',
                       name: 'size',
                       id: size,
-                      value: size,
-                      checked: product.quantity <= 0,
-                      disabled:
-                        product.quantity <= 0 || !product.size.includes(size),
+                      value: JSON.stringify(
+                        product.size?.find((s) => s.size === size)
+                      ),
+                      disabled: !product.size?.find((s) => s.size === size),
                       required: true,
                       onChange: (evt) => {
-                        setSize(evt.target.value as Size);
+                        console.log(evt.target.value);
+                        setSize(JSON.parse(evt.target.value));
+                        // console.log(selectedSize);
                       },
                     }}
                   />
                 ))}
               </div>
-              <button type="submit" disabled={product.quantity <= 0 || banned}>
+              {selectedSize && (
+                <p>
+                  In stock: {selectedSize.quantity}
+                  pcs
+                </p>
+              )}
+              <button type="submit" disabled={!selectedSize || banned}>
                 Add to bag
               </button>
             </form>
-            <button
+            {/* { <button
               disabled={banned}
               className="wishlist__button"
               onClick={addFavorite}
             >
               Add to wishlist
-            </button>
+            </button>} */}
           </div>
         </section>
       ) : (

@@ -52,12 +52,12 @@ export interface ProductInput extends Partial<Product> {
 export interface OrderedItem {
   product: any;
   quantity: number;
-  size: Size;
+  size: any;
 }
 
 export interface Order {
   _id: string;
-  user: string;
+  user: User;
   items: OrderedItem[];
 }
 
@@ -83,10 +83,16 @@ export interface Product {
   description: string;
   price: number;
   category: ProductCategory[];
-  size: Size[];
-  quantity: number;
+  size: ProductSize[];
+  cartQuantity: number;
   thumbnail: string;
   __v: number;
+}
+
+export interface ProductSize {
+  _id: string;
+  size: Size;
+  quantity: number;
 }
 
 export interface ProductsState {
@@ -99,7 +105,7 @@ export interface ProductsState {
 }
 
 export interface CartItem extends Omit<Product, 'size' | '__v'> {
-  size: Size;
+  size: Partial<ProductSize>;
 }
 
 type User = Omit<

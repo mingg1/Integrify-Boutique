@@ -21,7 +21,7 @@ const initialState: ProductsState = {
     price: 0,
     category: [],
     size: [],
-    quantity: 0,
+    cartQuantity: 0,
     thumbnail: '',
     __v: 0,
   },
@@ -127,26 +127,28 @@ const productsSlice = createSlice({
     addToCart: (state, action: { payload: CartItem }) => {
       const { _id: addedItem, size: addedItemSize, price } = action.payload;
       const sameItem = state.cart.findIndex(
-        (item) => item._id === addedItem && item.size === addedItemSize
+        (item) =>
+          item._id === addedItem && item.size.size === addedItemSize.size
       );
       if (sameItem >= 0) {
         state.cart[sameItem].price += price;
-        state.cart[sameItem].quantity += 1;
+        state.cart[sameItem].cartQuantity += 1;
       } else {
         state.cart.push(action.payload);
       }
       localStorage.setItem('cart', JSON.stringify(state.cart));
-      if (state.product) state.product.quantity -= 1;
+      if (state.product) state.product.cartQuantity -= 1;
     },
     removeFromCart: (state, action) => {
       const { addedItem, addedItemSize, price } = action.payload;
       const sameItem = state.cart.findIndex(
-        (item) => item._id === addedItem && item.size === addedItemSize
+        (item) =>
+          item._id === addedItem && item.size.size === addedItemSize.size
       );
       const removedItem = state.cart[sameItem];
-      if (removedItem.quantity > 1) {
+      if (removedItem.cartQuantity > 1) {
         removedItem.price -= price;
-        removedItem.quantity -= 1;
+        removedItem.cartQuantity -= 1;
       } else {
         state.cart = state.cart.filter((item) => item !== state.cart[sameItem]);
       }

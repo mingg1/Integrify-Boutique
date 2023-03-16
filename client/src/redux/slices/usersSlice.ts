@@ -70,6 +70,7 @@ export const addOrder = createAsyncThunk(
     { rejectWithValue }
   ) => {
     try {
+      console.log(order);
       return await (
         await axios.post(
           USER_ORDERS(id),
@@ -149,6 +150,9 @@ const usersSlice = createSlice({
     builder.addCase(addOrder.fulfilled, (state, { payload }) => {
       state.user?.orders.push(payload);
       localStorage.removeItem('cart');
+    });
+    builder.addCase(addOrder.rejected, (state, action) => {
+      console.log(action.payload as AxiosError);
     });
     builder.addCase(getOrders.fulfilled, (state, { payload }) => {
       return payload;

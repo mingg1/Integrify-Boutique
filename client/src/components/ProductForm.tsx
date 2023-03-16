@@ -48,12 +48,11 @@ const ProductForm = ({ product, submitAction, editMode }: ProductFormProps) => {
     const categories = getCheckedFields(form, 'categories');
 
     const { name, price, description, quantity, thumbnail } = form;
-    const input: ProductInput = {
+    const input: ProductInput & { quantity: number } = {
       name: name.value,
       price: +price.value,
       description: description.value,
       quantity: +quantity.value,
-      size: sizes as Size[],
       category: categories as ProductCategory[],
       token,
     };
@@ -106,7 +105,9 @@ const ProductForm = ({ product, submitAction, editMode }: ProductFormProps) => {
           placeholder: 'Quantity',
           name: 'quantity',
           required: true,
-          value: product?.quantity?.toString(),
+          value: product?.size
+            .reduce((prev, cur) => prev + cur.quantity, 0)
+            .toString(),
         }}
       />
       <div className="product-form__thumbnail-btn__container">
@@ -146,7 +147,7 @@ const ProductForm = ({ product, submitAction, editMode }: ProductFormProps) => {
         label="Categories"
         options={ProductCategory}
       />
-      <Checkbox property={product?.size} label="Sizes" options={Size} />
+      {/* <Checkbox property={product?.size} label="Sizes" options={Size} /> */}
       <button type="submit">{editMode ? 'Edit Product' : 'Add Product'}</button>
     </form>
   );

@@ -38,8 +38,14 @@ const ProductList = () => {
                     <div className="cart-item__info__text">
                       <p>{item.name}</p>
                       <p>{item.price} €</p>
-                      <p>Quantity: {item.quantity} pcs</p>
-                      <p>Size: {item.size.join(' / ')}</p>
+                      <p>Quantity: {item.cartQuantity} pcs</p>
+                      <p>
+                        Size:{' '}
+                        {item.size.reduce(
+                          (prev, cur) => prev + cur.size + ' / ',
+                          ''
+                        )}
+                      </p>
                       <p>Category: {item.category.join(' / ')}</p>
                     </div>
                     <Link className="edit-button" to={`${item._id}/edit`}>

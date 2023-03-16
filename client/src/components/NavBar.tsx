@@ -39,7 +39,6 @@ const NavBar = () => {
     evt.preventDefault();
     if (!query) return;
 
-    console.log(query);
     navigate({
       pathname: '/search',
       search: createSearchParams({ query }).toString(),
@@ -84,7 +83,7 @@ const NavBar = () => {
         </li>
         <li>
           <Link to="/cart">
-            Cart ({cart.reduce((prev, item) => prev + item.quantity, 0)})
+            Cart ({cart.reduce((prev, item) => prev + item.cartQuantity, 0)})
           </Link>
         </li>
         <li>

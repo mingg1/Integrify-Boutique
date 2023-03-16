@@ -17,13 +17,13 @@ const Cart = () => {
       removeFromCart({
         addedItem: item._id,
         addedItemSize: item.size,
-        price: item.price / item.quantity,
+        price: item.price / item.cartQuantity,
       })
     );
   };
 
   const addQuantity = (item: CartItem) => {
-    dispatch(addToCart({ ...item, price: item.price / item.quantity }));
+    dispatch(addToCart({ ...item, price: item.price / item.cartQuantity }));
   };
 
   return (
@@ -32,7 +32,7 @@ const Cart = () => {
       <section className="cart__container">
         <div className="cart-item__list">
           {cart.map((item) => (
-            <div key={item._id} className="cart-item">
+            <div key={`${item._id}${item.size.size}`} className="cart-item">
               <div className="cart-item__info">
                 <Link to={`/products/${item._id}`}>
                   <img
@@ -45,7 +45,7 @@ const Cart = () => {
                   <Link to={`/products/${item._id}`}>
                     <p className="cart-item__name">{item.name}</p>
                   </Link>
-                  <p>Size: {item.size}</p>
+                  <p>Size: {item.size.size}</p>
                   <div className="cart-item__quantity-btn-container">
                     <p>Quantity: </p>
                     <button
@@ -55,7 +55,7 @@ const Cart = () => {
                     >
                       -
                     </button>
-                    <p>{item.quantity}</p>
+                    <p>{item.cartQuantity}</p>
                     <button
                       onClick={() => {
                         addQuantity(item);
@@ -73,7 +73,7 @@ const Cart = () => {
                         removeFromCart({
                           addedItem: item._id,
                           addedItemSize: item.size,
-                          price: item.price / item.quantity,
+                          price: item.price / item.cartQuantity,
                         })
                       );
                     }}
@@ -96,13 +96,21 @@ const Cart = () => {
           <button
             disabled={banned}
             onClick={async () => {
-              const orderItems = cart.map((item) => ({
+              if (!userId) {
+                alert('Log in first to make the order.');
+                return navigate('/login');
+              }
+              const orderedItems = cart.map((item) => ({
                 product: item._id,
-                quantity: item.quantity,
-                size: item.size.toString() as Size,
+                quantity: item.cartQuantity,
+                size: item.size._id!,
               }));
               const resultAction = await dispatch(
-                addOrder({ id: userId, authToken: token, order: orderItems })
+                addOrder({
+                  id: userId,
+                  authToken: token,
+                  order: orderedItems,
+                })
               );
 
               if (addOrder.fulfilled.match(resultAction)) {

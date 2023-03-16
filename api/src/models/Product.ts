@@ -14,13 +14,13 @@ export enum ProductCategory {
   Shoes = 'shoes',
   Bag = 'bag',
 }
-export enum Size {
-  XSmall = 'XS',
-  Small = 'S',
-  Medium = 'M',
-  Large = 'L',
-  XLarge = 'XL',
-}
+// export enum Size {
+//   XSmall = 'XS',
+//   Small = 'S',
+//   Medium = 'M',
+//   Large = 'L',
+//   XLarge = 'XL',
+// }
 
 export type ProductDocument = Document & {
   name: string
@@ -28,8 +28,7 @@ export type ProductDocument = Document & {
   price: number
   thumbnail?: string
   category?: ProductCategory[]
-  size?: Size[]
-  quantity: number
+  size?: mongoose.Types.ObjectId[]
 }
 
 const productSchema = new mongoose.Schema({
@@ -54,17 +53,12 @@ const productSchema = new mongoose.Schema({
     enum: ProductCategory,
     required: true,
   },
-  size: {
-    type: [String],
-    enum: Size,
-    required: true,
-  },
-  quantity: {
-    type: Number,
-    required: true,
-    default: 1,
-    min: 0,
-  },
+  size: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Size',
+    },
+  ],
 })
 
 export default mongoose.model<ProductDocument>('Product', productSchema)

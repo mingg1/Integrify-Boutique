@@ -20,6 +20,7 @@ const OrderDetail = () => {
       getOrders({ id: userId, authToken: token })
     );
     if (getOrders.fulfilled.match(actionResult)) {
+      console.log('done', actionResult);
       setOrder(actionResult.payload);
       getUserOrder(actionResult.payload);
     }
@@ -28,7 +29,7 @@ const OrderDetail = () => {
   useEffect(() => {
     if (orders.length === 0) getUserOrders();
     console.log(order);
-  }, [dispatch, id, orders]);
+  }, [dispatch, id, orders, order]);
 
   return (
     <main style={{ marginBottom: '6rem' }}>
@@ -41,6 +42,10 @@ const OrderDetail = () => {
         ) : orders ? (
           <div style={{ display: 'flex', flexDirection: 'column' }}>
             <p>Order id #{id}</p>
+            <p>
+              Ordered user: {order?.user.firstName} {order?.user.lastName} (
+              {order?.user.email})
+            </p>
             <ul className="products">
               {order?.items?.map((item, i) => (
                 <li key={item.product._id} className="cart-item">
@@ -54,7 +59,8 @@ const OrderDetail = () => {
                       <p>{item.product.name}</p>
                       <p>{item.product.price} €</p>
                       <p>Quantity: {item.quantity} pcs</p>
-                      <p>Size: {item.size}</p>
+                      <p>Size: {item.size.size}</p>
+                      <p>Sum: {item.quantity * item.product.price}€</p>
                     </div>
                   </div>
                   <hr />

@@ -1,8 +1,8 @@
 import bcrypt from 'bcrypt'
 import User, { UserDocument } from '../models/User'
-import Product from '../models/Product'
 import Order, { Item, OrderDocument } from './../models/Order'
 import { NotFoundError, BadRequestError } from '../helpers/apiError'
+import Size from '../models/Size'
 
 // const createOrderList = async (
 //   userId: Types.ObjectId
@@ -29,10 +29,11 @@ const addOrder = async (
   })
 
   items.forEach(async (item) => {
-    const foundItem = (await Product.findById(item.product))?.quantity
-    await Product.findByIdAndUpdate(item.product, {
-      quantity: foundItem ? foundItem - item.quantity : 0,
-    })
+    const foundSize = await Size.findById(item.size)
+    if (foundSize?.quantity) {
+      foundSize.quantity -= item.quantity
+      foundSize.save()
+    }
   })
 
   foundUser.orders.push(order._id)
@@ -49,6 +50,7 @@ const getOrderList = async (
   const orderList = await Order.find({ user: userId }).populate([
     'user',
     { path: 'items', populate: { path: 'product' } },
+    { path: 'items', populate: { path: 'size' } },
   ])
   return orderList
 }
@@ -57,6 +59,7 @@ const getAllOrders = async (): Promise<OrderDocument[] | null> => {
   const orderList = await Order.find().populate([
     'user',
     { path: 'items', populate: { path: 'product' } },
+    { path: 'items', populate: { path: 'size' } },
   ])
   return orderList
 }

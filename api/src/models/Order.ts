@@ -1,10 +1,9 @@
 import mongoose, { Document } from 'mongoose'
-import { ProductDocument, Size } from './Product'
 
 export interface Item {
   product: mongoose.Types.ObjectId
   quantity: number
-  size: Size
+  size: mongoose.Types.ObjectId
 }
 
 export type OrderDocument = Document & {
@@ -19,20 +18,20 @@ const orderSchema = new mongoose.Schema({
     required: true,
     index: true,
   },
-  items: {
-    type: [
-      {
+  items: [
+    {
+      type: {
         product: {
           type: mongoose.Types.ObjectId,
           ref: 'Product',
           required: true,
         },
         quantity: { type: Number, required: true },
-        size: { type: String, enum: Size, required: true },
+        size: { type: mongoose.Types.ObjectId, ref: 'Size', required: true },
       },
-    ],
-    required: true,
-  },
+      required: true,
+    },
+  ],
 })
 
 export default mongoose.model<OrderDocument>('Order', orderSchema)
