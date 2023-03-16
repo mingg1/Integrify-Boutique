@@ -1,127 +1,67 @@
-# Fullstack project - read carefully.
-Choose between 2 topics provided in the REST API Slides
+# Integrify Boutique 👗👕
 
+Full-stack E-commerce application with MERN stack
 
-## Installation
+<img width="480" alt="main page" src="https://user-images.githubusercontent.com/61379336/225486441-e3a7c528-60b4-4866-a30e-b84a1dd87c21.png">
 
-You should use either `npm` or `yarn` but not both. **It's recommended** to use `yarn`
+[Link to the demo 🛍](https://integrify-boutique-frontend.vercel.app/)
 
-This template already comes with all the needed packages. In case you want to install extra ones ie MUI feel free.
+## Used technology
 
+- Redux
+- Redux-thunk
+- ReactJS
+- TypeScript
+- Node.js
+- Express.js
+- MongoDB & Mongoose
+- Deployed to Vercel (frontend) & Railway (Backend)
 
+## Features
 
-you have two different folders:
+- ### List of products
 
-1. `api:` where your backend lives
+  Users can explore a list of products and also specific items by categories.
+  <img width="480" alt="products" src="https://user-images.githubusercontent.com/61379336/225486787-21690ce2-0493-42f1-8a99-03ab02b7463d.png">
 
-2. `client:` Frontend of your application
+- ### Search products by name
 
-To install, you need to go to both directories and install their packages as such:
+  Users can search products by their name. The results show items whose name includes the search keyword.
+  <img width="480" alt="search" src="https://user-images.githubusercontent.com/61379336/225487185-bf32ad66-c9f7-44f8-97cc-16c2a9465709.png">
 
-```bash
-cd api
-yarn install
-```
+- ### Item information
 
-```bash
-cd client
-yarn install
-```
+  Users can check detailed information of a product such as available sizes, quantities, and a short description of it.
+  Users can also put the product into a cart it it is available. If it's not available, the size buttons are not clickable and would not be added into the cart.
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225487669-1efa920c-3535-4711-9e23-7a6ea035f5c2.png">
 
-To run the `frontend` make sure you are under the client folder and:
+- ### Cart
 
-````bash
-yarn start
-````
+  Users can order items through the cart. In the Cart page, users can modify the quantity of added items or delete them entirely. When users order items from the cart, they can check their own order hisories in their profile page.
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225488399-6827aa53-0f8a-4912-9426-176d05db7581.png">
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225488631-99c95a1e-f549-4351-b5c3-72c43fd7707d.png">
 
-To run the `backend` make sure you are under the api folder and:
+- ### User account
 
-````bash
-yarn start:dev
-````
-<br />
+  Users can create their own user account for the site. They can create it by email or by logging in via Google.
+  Later on, users can change their name and email address, if they have made the account by email.
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225489075-69ff2009-589c-437a-8e53-40119a5652a4.png">
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225489146-9dfac1f5-6e5a-43bd-967c-9ae47a2e7217.png">
+  <img width="480" alt="item" src="https://user-images.githubusercontent.com/61379336/225489247-d7d88abc-c848-4201-84ac-24f63328040d.png">
 
-> `Pro tip:`Open 3 different terminals. 1 for client dir (to run the client), 1 for api dir (to run the api), and another in the root directory for committing your changes.
+  There are two types of users, Customer, and Admin. Customer users are able to explore products and make purchases. Admin users can manage products and users on the Admin page, browse all the orders that every user has made, as well as buy items.
 
-<br />
+  <img width="480" alt="profile" src="https://user-images.githubusercontent.com/61379336/225489541-89e9407f-a802-4022-be9b-09bfb0ed61be.png">
+  <img width="480" alt="admin" src="https://user-images.githubusercontent.com/61379336/225489718-ebc94786-afa6-47ca-9933-6280a97dedc7.png">
 
-## `api` folder
+  - #### Managing users
 
-1. Create a `.env` file in the root directory and copy the content from `.env.example`
-2. Make sure MongoDB is running (if you are using local MongoDB)
-3. If you need to customize your env, take a look at `secrets.ts` file
-4. Separate routes and functions into routers, controllers, services folders
+  <img width="480" alt="userlist" src="https://user-images.githubusercontent.com/61379336/225489780-4af25df6-db36-43d1-80ce-acef8fd1d8c4.png">
+  Admin users can ban / unban registered users. Banned users are not able to make an order.
 
-<br />
+  - #### Managing products
 
-## `client` folder
-
-1. Create a `.env` file in the root directory if you need to store secret data
-2. You can complete your project using SASS, CSS, or other styling libraries
-
-<br />
-
-## Requirements of the project:
-
-Check the REST API slides for what are the required features
-
-*you are allowed to add more features if you finish the required ones.*
-
-<br />
-
-## How should you approach the assignment?
-
-1. **OPEN a PR** as soon as you get your first task or feature implemented. And keep doing that for every. single. feature.
-   1. **use the** Ready for review label and **leave a comment** to let us know what to review
-2. Make sure you don't spend too much time on a task (if you are, it means you need help or you will fall behind if you don't ask for help)
-3. **DO NOT** copy-paste a bunch of code and then try to figure out how to make it work. what you should be doing is taking it one step at a time.
-4. **MAKE SURE** to **PLAN** then execute. when you plan a feature you should visualise how it would be coded and what you need to complete it. the more time you spend on planning and thinking about the steps you should do, the easier and faster the coding would be.
-5. If you have a problem that you are trying to solve, split it into smaller problems and make sure you solve one and then move to the next one.
-6. You are advised to follow this approach:
-   1. Build one Model at a time, so if you are starting with products then build its model and only products model (if this collection would have a relation with another collection then it's fine to build that too)
-   2. Focus on finishing the most basic routes of all CRUD operations in their simplest format. (without fancy controllers or aggregations etc)
-   3. The idea is MVP approach you want to build the basic routes and most basic features then start adding up more complex logic as you go further.
-   4. once the basic routes are done, move to the client folder and start connecting the routes you built with the frontend. (you have to see the results)
-   5. if you start that way you are good to start playing around and have more complex logic whether in backend or frontend
-   6. if you follow this approach you would practice, one of the most important things is to add features to an existing codebase.
-7. And again, **PLEASE**, **DO NOT** push your code when you have so much code written. it will be so hard to suggest better approaches or solutions and you would end up with a very basic code review. If you don't care and don't want a code review feel free to push your fullstack project at the last minute.
-
-<br />
-
-## Recap on how to start developing
-1. Build basic routes
-2. Connect some or most of the routes to your frontend
-3. Start adding Auth after the security lecture (Please, I don't want to see Auth code when you don't have all the routes implemented + some routes being fetched from the frontend)
-
-> PS. *you are only allowed to add Auth before the security lecture **if** you have all routes implemented + some routes fetched from the frontend then*
-
-<br />
-
-## Do you have a problem and want quick help?
-
-Sending me/Vincent a message saying my app is broken would help **no one**.
-**you should have the following:**
-
-1. what are you trying to do
-2. when the problem happens at what point
-3. screenshot of the code flow
-
-**OR**:
-
-You should have by now, mine and Vincent's 1on1 30mins links, feel free to book.
-
-<br />
-
-## FAQ
-
-* What if I finished earlier?
-  * You can always have extra tasks; reach out to me if you need help on what to add.
-* Can I add more features?
-  * Sure you can, but first, you are required to finish the requirements
-* I'm progressing slowly! I'm stuck!
-  * Reach out to me or Vincent. (Remember you have a deadline to meet)
-* Deadline?
-  * check your calendar (presentation days)
-* Can I know my own evaluation?
-  * this data is between me and the BD team
-  * you can still book 1on1 session with me or send me a DM where I would tell you my opinion of your tech/soft skills.
+  Admin users can view a list of registered products and quantities in stock. If needed, they can modify information of products, or delete them from the list. Moreover, adding a new item can be done.
+  <img width="480" alt="userlist" src="https://user-images.githubusercontent.com/61379336/225490741-62222bb3-ec81-4b52-9c77-17bab2583f06.png">
+  <img width="480" alt="userlist" src="https://user-images.githubusercontent.com/61379336/225490821-ef831e17-c60b-4220-a409-d43498fbecff.png">
+  <img width="480" alt="userlist" src="https://user-images.githubusercontent.com/61379336/225490950-28b7a179-9efb-4db7-aa2a-f3b5736270de.png">
